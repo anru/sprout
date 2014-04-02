@@ -1,0 +1,18 @@
+{
+  "name": "sprout",
+  "version": "0.0.1",
+  "description": "Change JS structures efficiently without mutating them",
+  "main": "index.js",
+  "repository": "https://github.com/herrstucki/sprout.git",
+  "keywords": [
+    "immutable"
+  ],
+  "scripts": {
+    "test": "vows --spec"
+  },
+  "author": "Jeremy Stucki",
+  "license": "BSD",
+  "devDependencies": {
+    "vows": "~0.7.0"
+  }
+}
