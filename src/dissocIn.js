@@ -1,4 +1,4 @@
-var dissoc = require('./util').dissoc;
+var dissoc = require('./dissoc');
 
 function dissocIn(obj, keys) {
   var k = keys[0],
