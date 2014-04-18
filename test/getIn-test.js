@@ -15,7 +15,7 @@ vows.describe('getIn()').addBatch({
       assert.equal(getIn(obj, ['foo', 'bar']), 1);
     },
     'a non-existing property returns null by default': function(obj) {
-      assert.isNull(getIn(obj, ['bar', 'foo']));
+      assert.isUndefined(getIn(obj, ['bar', 'foo']));
     },
     'a non-existing property returns the default value if provided': function(obj) {
       assert.equal(getIn(obj, ['foo', 'bar'], 2), 1);

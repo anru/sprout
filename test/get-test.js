@@ -13,7 +13,7 @@ vows.describe('get()').addBatch({
       assert.equal(get(obj, 'foo'), 1);
     },
     'a non-existing property returns null by default': function(obj) {
-      assert.isNull(get(obj, 'bar'));
+      assert.isUndefined(get(obj, 'bar'));
     },
     'a non-existing property returns the default value if provided': function(obj) {
       assert.equal(get(obj, 'foo', 2), 1);

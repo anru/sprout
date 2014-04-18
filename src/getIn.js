@@ -4,7 +4,7 @@ var isUndefined = require('./util').isUndefined;
 function getIn(obj, keys, orValue) {
   var k = keys[0],
       ks = keys.slice(1);
-  if (!obj.hasOwnProperty(k)) return isUndefined(orValue) ? null : orValue;
+  if (!obj.hasOwnProperty(k)) return isUndefined(orValue) ? void 0 : orValue;
   return ks.length ? getIn(obj[k], ks) : obj[k];
 }
 

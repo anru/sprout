@@ -35,7 +35,7 @@ sprout.get(obj, 'a') // => 'foo'
 
 sprout.getIn(obj, ['b', 'c']) // => 'bar'
 
-sprout.getIn(obj, ['b', 'd']) // => null
+sprout.getIn(obj, ['b', 'd']) // => undefined
 
 sprout.getIn(obj, ['b', 'd'], 'not found') // => 'not found'
 ```
