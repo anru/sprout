@@ -1,6 +1,6 @@
 {
   "name": "sprout",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Change JS structures efficiently without mutating them",
   "main": "index.js",
   "repository": "https://github.com/herrstucki/sprout.git",
