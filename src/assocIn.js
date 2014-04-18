@@ -1,12 +1,13 @@
-var copy = require('./util').copy;
+var copy = require('./util').copy,
+    getIn = require('./getIn');
 
 function assocIn(obj, keys, value) {
+  if (getIn(obj, keys) === value) return obj;
   var k = keys[0],
       ks = keys.slice(1),
       o = copy(obj);
-  o[k] = o[k] || {};
   if (ks.length) {
-    o[k] = assocIn(o[k], ks, value);
+    o[k] = (k in o) ? assocIn(o[k], ks, value) : assocIn({}, ks, value);
   } else {
     o[k] = value;
   }

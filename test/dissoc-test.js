@@ -17,5 +17,10 @@ vows.describe('dissoc()').addBatch({
       assert.equal(obj.foo, 1);
       assert.strictEqual(newObj.bar, obj.bar);
     },
+    'a non-existing property returns the same unchanged object': function(obj) {
+      var newObj = dissoc(obj, 'blah');
+      assert.strictEqual(newObj, obj);
+      assert.deepEqual(newObj, obj);
+    },
   }
 }).export(module);

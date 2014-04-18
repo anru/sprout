@@ -24,6 +24,11 @@ vows.describe('assoc()').addBatch({
       assert.isUndefined(obj.x);
       assert.strictEqual(newObj.foo, obj.foo);
       assert.strictEqual(newObj.bar, obj.bar);
+    },
+    'an existing property with the same value returns the same unchanged object': function(obj) {
+      var newObj = assoc(obj, 'foo', 1);
+      assert.strictEqual(newObj, obj);
+      assert.deepEqual(newObj, obj);
     }
   }
 }).export(module);

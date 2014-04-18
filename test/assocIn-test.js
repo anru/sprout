@@ -45,6 +45,11 @@ vows.describe('assocIn()').addBatch({
       assert.notStrictEqual(newObj, obj);
       assert.equal(newObj.x.y, 2);
       assert.isUndefined(obj.x);
+    },
+    'a nested property with the same value returns the same unchanged object': function(obj) {
+      var newObj = assocIn(obj, ['b', 'c', 'd'], 2);
+      assert.strictEqual(newObj, obj);
+      assert.deepEqual(newObj, obj);
     }
   }
 }).export(module);
