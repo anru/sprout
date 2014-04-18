@@ -9,13 +9,13 @@
   ],
   "scripts": {
     "test": "vows --spec",
-    "build": "webpack && uglifyjs -o sprout.min.js -- sprout.js"
+    "build": "browserify -s sprout -o sprout.js -- src/index.js && uglifyjs -o sprout.min.js -- sprout.js"
   },
   "author": "Jeremy Stucki",
   "license": "BSD",
   "devDependencies": {
+    "browserify": "^3.43.0",
     "uglify-js": "^2.4.13",
-    "vows": "~0.7.0",
-    "webpack": "^1.1.7"
+    "vows": "~0.7.0"
   }
 }

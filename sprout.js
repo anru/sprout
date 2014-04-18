@@ -1,220 +1,131 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define(factory);
-	else if(typeof exports === 'object')
-		exports["sprout"] = factory();
-	else
-		root["sprout"] = factory();
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
-/******/ 	
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
-/******/ 		};
-/******/ 		
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 		
-/******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
-/******/ 		
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/******/ 	
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/ 	
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/ 	
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/ 	
-/******/ 	
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ function(module, exports, __webpack_require__) {
+!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.sprout=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+var copy = _dereq_('./util').copy;
 
-	module.exports = {
-	  version: '0.0.3',
-	  // model: require('./src/model'), // Not finished
-	  get: __webpack_require__(1),
-	  getIn: __webpack_require__(2),
-	  assoc: __webpack_require__(3),
-	  dissoc: __webpack_require__(4),
-	  assocIn: __webpack_require__(5),
-	  dissocIn: __webpack_require__(6),
-	  merge: __webpack_require__(7)
-	};
+function assoc(obj, k, value) {
+  if (obj[k] === value) return obj;
+  var o = copy(obj);
+  o[k] = value;
+  return o;
+}
 
-/***/ },
-/* 1 */
-/***/ function(module, exports, __webpack_require__) {
+module.exports = assoc;
+},{"./util":9}],2:[function(_dereq_,module,exports){
+var copy = _dereq_('./util').copy,
+    getIn = _dereq_('./getIn');
 
-	var isUndefined = __webpack_require__(8).isUndefined;
+function assocIn(obj, keys, value) {
+  if (getIn(obj, keys) === value) return obj;
+  var k = keys[0],
+      ks = keys.slice(1),
+      o = copy(obj);
+  if (ks.length) {
+    o[k] = (k in o) ? assocIn(o[k], ks, value) : assocIn({}, ks, value);
+  } else {
+    o[k] = value;
+  }
+  return o;
+}
 
-	function get(obj, k, orValue) {
-	  if (!(k in obj)) return isUndefined(orValue) ? void 0 : orValue;
-	  return obj[k];
-	}
+module.exports = assocIn;
+},{"./getIn":6,"./util":9}],3:[function(_dereq_,module,exports){
+var copy = _dereq_('./util').copy;
 
-	module.exports = get;
+function dissoc(obj, k) {
+  if(!(k in obj)) return obj;
+  var o = copy(obj);
+  delete o[k];
+  return o;
+}
 
-/***/ },
-/* 2 */
-/***/ function(module, exports, __webpack_require__) {
+module.exports = dissoc;
+},{"./util":9}],4:[function(_dereq_,module,exports){
+var dissoc = _dereq_('./dissoc');
 
-	var isUndefined = __webpack_require__(8).isUndefined;
+function dissocIn(obj, keys) {
+  var k = keys[0],
+      ks = keys.slice(1),
+      o;
+  if (ks.length) {
+    o = dissocIn(obj, ks);
+  } else {
+    o = dissoc(obj, k);
+  }
+  return o;
+}
 
-	// Get value from a nested structure or null.
-	function getIn(obj, keys, orValue) {
-	  var k = keys[0],
-	      ks = keys.slice(1);
-	  if (!obj.hasOwnProperty(k)) return isUndefined(orValue) ? void 0 : orValue;
-	  return ks.length ? getIn(obj[k], ks) : obj[k];
-	}
+module.exports = dissocIn;
+},{"./dissoc":3}],5:[function(_dereq_,module,exports){
+var isUndefined = _dereq_('./util').isUndefined;
 
-	module.exports = getIn;
+function get(obj, k, orValue) {
+  if (!(k in obj)) return isUndefined(orValue) ? void 0 : orValue;
+  return obj[k];
+}
 
-/***/ },
-/* 3 */
-/***/ function(module, exports, __webpack_require__) {
+module.exports = get;
+},{"./util":9}],6:[function(_dereq_,module,exports){
+var isUndefined = _dereq_('./util').isUndefined;
 
-	var copy = __webpack_require__(8).copy;
+// Get value from a nested structure or null.
+function getIn(obj, keys, orValue) {
+  var k = keys[0],
+      ks = keys.slice(1);
+  if (!obj.hasOwnProperty(k)) return isUndefined(orValue) ? void 0 : orValue;
+  return ks.length ? getIn(obj[k], ks) : obj[k];
+}
 
-	function assoc(obj, k, value) {
-	  if (obj[k] === value) return obj;
-	  var o = copy(obj);
-	  o[k] = value;
-	  return o;
-	}
+module.exports = getIn;
+},{"./util":9}],7:[function(_dereq_,module,exports){
+module.exports = {
+  version: '0.0.3',
+  // model: require('./src/model'), // Not finished
+  get: _dereq_('./get'),
+  getIn: _dereq_('./getIn'),
+  assoc: _dereq_('./assoc'),
+  dissoc: _dereq_('./dissoc'),
+  assocIn: _dereq_('./assocIn'),
+  dissocIn: _dereq_('./dissocIn'),
+  merge: _dereq_('./merge')
+};
+},{"./assoc":1,"./assocIn":2,"./dissoc":3,"./dissocIn":4,"./get":5,"./getIn":6,"./merge":8}],8:[function(_dereq_,module,exports){
+function merge() {
+  var n = arguments.length,
+      i = -1,
+      o = {},
+      k, obj;
 
-	module.exports = assoc;
+  while (++i < n) {
+    obj = arguments[i];
+    for (k in obj) {
+      o[k] = obj[k];
+    }
+  }
 
-/***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
+  return o;
+}
 
-	var copy = __webpack_require__(8).copy;
+module.exports = merge;
+},{}],9:[function(_dereq_,module,exports){
+// Shallow copy
+function copy(obj) {
+  if (Array.isArray(obj)) return obj.slice();
+  var k,
+      newObj = {};
+  for (k in obj) {
+    newObj[k] = obj[k];
+  }
+  return newObj;
+}
 
-	function dissoc(obj, k) {
-	  if(!(k in obj)) return obj;
-	  var o = copy(obj);
-	  delete o[k];
-	  return o;
-	}
+// Is a value undefined
+function isUndefined(v) {
+  return v === void 0;
+}
 
-	module.exports = dissoc;
-
-/***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var copy = __webpack_require__(8).copy,
-	    getIn = __webpack_require__(2);
-
-	function assocIn(obj, keys, value) {
-	  if (getIn(obj, keys) === value) return obj;
-	  var k = keys[0],
-	      ks = keys.slice(1),
-	      o = copy(obj);
-	  if (ks.length) {
-	    o[k] = (k in o) ? assocIn(o[k], ks, value) : assocIn({}, ks, value);
-	  } else {
-	    o[k] = value;
-	  }
-	  return o;
-	}
-
-	module.exports = assocIn;
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var dissoc = __webpack_require__(4);
-
-	function dissocIn(obj, keys) {
-	  var k = keys[0],
-	      ks = keys.slice(1),
-	      o;
-	  if (ks.length) {
-	    o = dissocIn(obj, ks);
-	  } else {
-	    o = dissoc(obj, k);
-	  }
-	  return o;
-	}
-
-	module.exports = dissocIn;
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	function merge() {
-	  var n = arguments.length,
-	      i = -1,
-	      o = {},
-	      k, obj;
-
-	  while (++i < n) {
-	    obj = arguments[i];
-	    for (k in obj) {
-	      o[k] = obj[k];
-	    }
-	  }
-
-	  return o;
-	}
-
-	module.exports = merge;
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// Shallow copy
-	function copy(obj) {
-	  if (Array.isArray(obj)) return obj.slice();
-	  var k,
-	      newObj = {};
-	  for (k in obj) {
-	    newObj[k] = obj[k];
-	  }
-	  return newObj;
-	}
-
-	// Is a value undefined
-	function isUndefined(v) {
-	  return v === void 0;
-	}
-
-	module.exports = {
-	  copy: copy,
-	  isUndefined: isUndefined
-	};
-
-/***/ }
-/******/ ])
-})
+module.exports = {
+  copy: copy,
+  isUndefined: isUndefined
+};
+},{}]},{},[7])
+(7)
+});
