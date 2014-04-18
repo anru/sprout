@@ -1,6 +1,6 @@
 var vows = require('vows'),
     assert = require('assert'),
-    dissocIn = require('../index.js').dissocIn;
+    dissocIn = require('../src/index').dissocIn;
 
 vows.describe('dissocIn()').addBatch({
   'Dissociating': {

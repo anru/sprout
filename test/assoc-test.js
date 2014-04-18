@@ -1,6 +1,6 @@
 var vows = require('vows'),
     assert = require('assert'),
-    assoc = require('../index.js').assoc;
+    assoc = require('../src/index').assoc;
 
 vows.describe('assoc()').addBatch({
   'Associating': {
