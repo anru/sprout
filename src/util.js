@@ -9,19 +9,6 @@ function copy(obj) {
   return newObj;
 }
 
-// Merge two objects into a new object without modifying either
-function merge(obj1, obj2) {
-  var k,
-      newObj = {};
-  for (k in obj1) {
-    newObj[k] = obj1[k];
-  }
-  for (k in obj2) {
-    newObj[k] = obj2[k];
-  }
-  return newObj;
-}
-
 // Is a value undefined
 function isUndefined(v) {
   return v === void 0;
@@ -29,6 +16,5 @@ function isUndefined(v) {
 
 module.exports = {
   copy: copy,
-  merge: merge,
   isUndefined: isUndefined
 };
