@@ -9,11 +9,12 @@
   ],
   "scripts": {
     "test": "vows --spec",
-    "build": "webpack"
+    "build": "webpack && uglifyjs -o sprout.min.js -- sprout.js"
   },
   "author": "Jeremy Stucki",
   "license": "BSD",
   "devDependencies": {
+    "uglify-js": "^2.4.13",
     "vows": "~0.7.0",
     "webpack": "^1.1.7"
   }
