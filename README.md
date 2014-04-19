@@ -23,21 +23,21 @@ var obj = {a: 'foo', b: {c: 'bar'}};
 
 sprout.assoc(obj, 'a', 'baz'); // => {a: 'baz', b: {c: 'bar'}}
 
-sprout.assocIn(obj, ['b', 'c'], 'baz'); // => {a: 'foo', b: {c: 'baz'}}
+sprout.assoc(obj, ['b', 'c'], 'baz'); // => {a: 'foo', b: {c: 'baz'}}
 
-sprout.assocIn(obj, ['b', 'd', 'e'], 'baz'); // => {a: 'foo', b: {c: 'bar', d: {e: 'baz'}}}
+sprout.assoc(obj, ['b', 'd', 'e'], 'baz'); // => {a: 'foo', b: {c: 'bar', d: {e: 'baz'}}}
 
 sprout.dissoc(obj, 'a'); // => {b: {c: 'bar'}}
 
-sprout.dissocIn(obj, ['b', 'c']); // => {a: 'foo', b: {}}
+sprout.dissoc(obj, ['b', 'c']); // => {a: 'foo', b: {}}
 
 sprout.get(obj, 'a') // => 'foo'
 
-sprout.getIn(obj, ['b', 'c']) // => 'bar'
+sprout.get(obj, ['b', 'c']) // => 'bar'
 
-sprout.getIn(obj, ['b', 'd']) // => undefined
+sprout.get(obj, ['b', 'd']) // => undefined
 
-sprout.getIn(obj, ['b', 'd'], 'not found') // => 'not found'
+sprout.get(obj, ['b', 'd'], 'not found') // => 'not found'
 ```
 
 See tests for more details.
@@ -48,19 +48,9 @@ See tests for more details.
 * The API is modeled after Clojure's `assoc`, `assoc-in`, `get`, `get-in`, etc.
 * [Cortex](https://github.com/mquan/cortex)
 
-
-## Planned:
-
-* low-level mutation-safe modifiers (assoc, assocIn, dissoc, dissocIn, updateIn, conj, cons)
-* low-level mutating modifiers (set, setIn, deleteIn) (probably not part of the public API)
-* high-level 'model' where updates can be batched synchronously (to only create one copy) or asynchronously (timeout or rAF), with a callback
-* high-level 'history' which tracks model changes over time and provides undo/redo functionality.
-
 ## TODO
 
-* Find a good name (which is available on npm)
 * `updateIn(path, fn)` where `fn(oldValue) { return oldValue + newValue; }`
-* etc. etc.
 
 ## Author
 
