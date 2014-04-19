@@ -7,5 +7,6 @@ module.exports = {
   dissoc: require('./dissoc'),
   assocIn: require('./assocIn'),
   dissocIn: require('./dissocIn'),
+  assocObj: require('./assocObj'),
   merge: require('./merge')
 };

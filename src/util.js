@@ -9,6 +9,18 @@ function copy(obj) {
   return newObj;
 }
 
+function objectKeys(obj) {
+  var keys = [], k;
+  for (k in obj) {
+    keys.push(k);
+  }
+  return keys;
+}
+
+function isArrayOrObject(obj) {
+  return typeof obj === 'object';
+}
+
 // Is a value undefined
 function isUndefined(v) {
   return v === void 0;
@@ -16,5 +28,7 @@ function isUndefined(v) {
 
 module.exports = {
   copy: copy,
+  objectKeys: objectKeys,
+  isArrayOrObject: isArrayOrObject,
   isUndefined: isUndefined
 };

@@ -9,7 +9,7 @@ function assoc(obj, k, value) {
 }
 
 module.exports = assoc;
-},{"./util":9}],2:[function(_dereq_,module,exports){
+},{"./util":10}],2:[function(_dereq_,module,exports){
 var copy = _dereq_('./util').copy,
     getIn = _dereq_('./getIn');
 
@@ -27,7 +27,33 @@ function assocIn(obj, keys, value) {
 }
 
 module.exports = assocIn;
-},{"./getIn":6,"./util":9}],3:[function(_dereq_,module,exports){
+},{"./getIn":7,"./util":10}],3:[function(_dereq_,module,exports){
+var copy = _dereq_('./util').copy,
+    objectKeys = _dereq_('./util').objectKeys,
+    isArrayOrObject = _dereq_('./util').isArrayOrObject,
+    getIn = _dereq_('./getIn');
+
+function assocObj(obj, obj2) {
+  var keys = objectKeys(obj2),
+      n = keys.length,
+      i = -1,
+      o, o2, k;
+  if (!n) return obj;
+  o = copy(obj);
+  while (++i < n) {
+    k = keys[i];
+    o2 = obj2[k];
+    if (isArrayOrObject(o2)) {
+      o[k] = (k in o) ? assocObj(o[k], o2) : assocObj({}, o2);
+    } else {
+      o[k] = o2;
+    }
+  }
+  return o;
+}
+
+module.exports = assocObj;
+},{"./getIn":7,"./util":10}],4:[function(_dereq_,module,exports){
 var copy = _dereq_('./util').copy;
 
 function dissoc(obj, k) {
@@ -38,7 +64,7 @@ function dissoc(obj, k) {
 }
 
 module.exports = dissoc;
-},{"./util":9}],4:[function(_dereq_,module,exports){
+},{"./util":10}],5:[function(_dereq_,module,exports){
 var dissoc = _dereq_('./dissoc');
 
 function dissocIn(obj, keys) {
@@ -54,7 +80,7 @@ function dissocIn(obj, keys) {
 }
 
 module.exports = dissocIn;
-},{"./dissoc":3}],5:[function(_dereq_,module,exports){
+},{"./dissoc":4}],6:[function(_dereq_,module,exports){
 var isUndefined = _dereq_('./util').isUndefined;
 
 function get(obj, k, orValue) {
@@ -63,7 +89,7 @@ function get(obj, k, orValue) {
 }
 
 module.exports = get;
-},{"./util":9}],6:[function(_dereq_,module,exports){
+},{"./util":10}],7:[function(_dereq_,module,exports){
 var isUndefined = _dereq_('./util').isUndefined;
 
 // Get value from a nested structure or null.
@@ -75,7 +101,7 @@ function getIn(obj, keys, orValue) {
 }
 
 module.exports = getIn;
-},{"./util":9}],7:[function(_dereq_,module,exports){
+},{"./util":10}],8:[function(_dereq_,module,exports){
 module.exports = {
   version: '0.0.3',
   // model: require('./src/model'), // Not finished
@@ -85,9 +111,10 @@ module.exports = {
   dissoc: _dereq_('./dissoc'),
   assocIn: _dereq_('./assocIn'),
   dissocIn: _dereq_('./dissocIn'),
+  assocObj: _dereq_('./assocObj'),
   merge: _dereq_('./merge')
 };
-},{"./assoc":1,"./assocIn":2,"./dissoc":3,"./dissocIn":4,"./get":5,"./getIn":6,"./merge":8}],8:[function(_dereq_,module,exports){
+},{"./assoc":1,"./assocIn":2,"./assocObj":3,"./dissoc":4,"./dissocIn":5,"./get":6,"./getIn":7,"./merge":9}],9:[function(_dereq_,module,exports){
 function merge() {
   var n = arguments.length,
       i = -1,
@@ -105,7 +132,7 @@ function merge() {
 }
 
 module.exports = merge;
-},{}],9:[function(_dereq_,module,exports){
+},{}],10:[function(_dereq_,module,exports){
 // Shallow copy
 function copy(obj) {
   if (Array.isArray(obj)) return obj.slice();
@@ -117,6 +144,18 @@ function copy(obj) {
   return newObj;
 }
 
+function objectKeys(obj) {
+  var keys = [], k;
+  for (k in obj) {
+    keys.push(k);
+  }
+  return keys;
+}
+
+function isArrayOrObject(obj) {
+  return typeof obj === 'object';
+}
+
 // Is a value undefined
 function isUndefined(v) {
   return v === void 0;
@@ -124,8 +163,10 @@ function isUndefined(v) {
 
 module.exports = {
   copy: copy,
+  objectKeys: objectKeys,
+  isArrayOrObject: isArrayOrObject,
   isUndefined: isUndefined
 };
-},{}]},{},[7])
-(7)
+},{}]},{},[8])
+(8)
 });
