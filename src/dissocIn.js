@@ -1,15 +1,15 @@
-var dissoc = require('./dissoc'),
-    copy = require('./util').copy;
+var copy = require('./util').copy,
+    objectKeys = require('./util').objectKeys;
 
 function dissocIn(obj, keys) {
   var k = keys[0],
       ks = keys.slice(1),
-      o;
+      o = copy(obj);
   if (ks.length) {
-    o = copy(obj);
     o[k] = dissocIn(obj[k], ks);
+    if (!objectKeys(o[k]).length) delete o[k];
   } else {
-    o = dissoc(obj, k);
+    delete o[k];
   }
   return o;
 }
