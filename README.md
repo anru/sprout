@@ -29,7 +29,7 @@ sprout.assoc(obj, ['b', 'd', 'e'], 'baz'); // => {a: 'foo', b: {c: 'bar', d: {e:
 
 sprout.dissoc(obj, 'a'); // => {b: {c: 'bar'}}
 
-sprout.dissoc(obj, ['b', 'c']); // => {a: 'foo', b: {}}
+sprout.dissoc(obj, ['b', 'c']); // => {a: 'foo'}
 
 sprout.get(obj, 'a') // => 'foo'
 
