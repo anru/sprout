@@ -9,7 +9,7 @@ function assoc(obj, k, value) {
 }
 
 module.exports = assoc;
-},{"./util":10}],2:[function(_dereq_,module,exports){
+},{"./util":11}],2:[function(_dereq_,module,exports){
 var copy = _dereq_('./util').copy,
     getIn = _dereq_('./getIn');
 
@@ -27,7 +27,7 @@ function assocIn(obj, keys, value) {
 }
 
 module.exports = assocIn;
-},{"./getIn":7,"./util":10}],3:[function(_dereq_,module,exports){
+},{"./getIn":8,"./util":11}],3:[function(_dereq_,module,exports){
 var copy = _dereq_('./util').copy,
     objectKeys = _dereq_('./util').objectKeys,
     isArrayOrObject = _dereq_('./util').isArrayOrObject,
@@ -53,7 +53,7 @@ function assocObj(obj, obj2) {
 }
 
 module.exports = assocObj;
-},{"./getIn":7,"./util":10}],4:[function(_dereq_,module,exports){
+},{"./getIn":8,"./util":11}],4:[function(_dereq_,module,exports){
 var copy = _dereq_('./util').copy;
 
 function dissoc(obj, k) {
@@ -64,23 +64,52 @@ function dissoc(obj, k) {
 }
 
 module.exports = dissoc;
-},{"./util":10}],5:[function(_dereq_,module,exports){
-var dissoc = _dereq_('./dissoc');
+},{"./util":11}],5:[function(_dereq_,module,exports){
+var copy = _dereq_('./util').copy,
+    objectKeys = _dereq_('./util').objectKeys;
 
 function dissocIn(obj, keys) {
   var k = keys[0],
       ks = keys.slice(1),
-      o;
+      o = copy(obj);
   if (ks.length) {
-    o = dissocIn(obj, ks);
+    o[k] = dissocIn(obj[k], ks);
+    if (!objectKeys(o[k]).length) delete o[k];
   } else {
-    o = dissoc(obj, k);
+    delete o[k];
   }
   return o;
 }
 
 module.exports = dissocIn;
-},{"./dissoc":4}],6:[function(_dereq_,module,exports){
+},{"./util":11}],6:[function(_dereq_,module,exports){
+var dissoc = _dereq_('./dissoc'),
+    objectKeys = _dereq_('./util').objectKeys,
+    isArrayOrObject = _dereq_('./util').isArrayOrObject,
+    copy = _dereq_('./util').copy;
+
+function dissocObj(obj, obj2) {
+  var keys = objectKeys(obj2),
+      n = keys.length,
+      i = -1,
+      o, o2, k;
+  if (!n) return obj;
+  o = copy(obj);
+  while(++i < n) {
+    k = keys[i];
+    o2 = obj2[k];
+    if (isArrayOrObject(o2)) {
+      o[k] = dissocObj(obj[k], o2);
+      if (!objectKeys(o[k]).length) delete o[k];
+    } else {
+      delete o[k];
+    }
+  }
+  return o;
+}
+
+module.exports = dissocObj;
+},{"./dissoc":4,"./util":11}],7:[function(_dereq_,module,exports){
 var isUndefined = _dereq_('./util').isUndefined;
 
 function get(obj, k, orValue) {
@@ -89,7 +118,7 @@ function get(obj, k, orValue) {
 }
 
 module.exports = get;
-},{"./util":10}],7:[function(_dereq_,module,exports){
+},{"./util":11}],8:[function(_dereq_,module,exports){
 var isUndefined = _dereq_('./util').isUndefined;
 
 // Get value from a nested structure or null.
@@ -101,20 +130,41 @@ function getIn(obj, keys, orValue) {
 }
 
 module.exports = getIn;
-},{"./util":10}],8:[function(_dereq_,module,exports){
+},{"./util":11}],9:[function(_dereq_,module,exports){
+var get = _dereq_('./get'),
+    getIn = _dereq_('./getIn'),
+    assoc = _dereq_('./assoc'),
+    dissoc = _dereq_('./dissoc'),
+    assocIn = _dereq_('./assocIn'),
+    dissocIn = _dereq_('./dissocIn'),
+    assocObj = _dereq_('./assocObj'),
+    dissocObj = _dereq_('./dissocObj'),
+    merge = _dereq_('./merge'),
+    util = _dereq_('./util');
+
+function multiGet(obj, path, orValue) {
+  if (typeof path === 'string') return get(obj, path, orValue);
+  return getIn(obj, path, orValue);
+}
+
+function multiAssoc(obj, path, value) {
+  if (typeof path === 'string') return assoc(obj, path, value);
+  if (!util.isUndefined(value) && util.isArray(path)) return assocIn(obj, path, value);
+  return assocObj(obj, path);
+}
+
+function multiDissoc(obj, path) {
+  if (typeof path === 'string') return dissoc(obj, path);
+  if (util.isArray(path)) return dissocIn(obj, path);
+  return dissocObj(obj, path);
+}
+
 module.exports = {
-  version: '0.0.3',
-  // model: require('./src/model'), // Not finished
-  get: _dereq_('./get'),
-  getIn: _dereq_('./getIn'),
-  assoc: _dereq_('./assoc'),
-  dissoc: _dereq_('./dissoc'),
-  assocIn: _dereq_('./assocIn'),
-  dissocIn: _dereq_('./dissocIn'),
-  assocObj: _dereq_('./assocObj'),
-  merge: _dereq_('./merge')
+  get: multiGet,
+  assoc: multiAssoc,
+  dissoc: multiDissoc
 };
-},{"./assoc":1,"./assocIn":2,"./assocObj":3,"./dissoc":4,"./dissocIn":5,"./get":6,"./getIn":7,"./merge":9}],9:[function(_dereq_,module,exports){
+},{"./assoc":1,"./assocIn":2,"./assocObj":3,"./dissoc":4,"./dissocIn":5,"./dissocObj":6,"./get":7,"./getIn":8,"./merge":10,"./util":11}],10:[function(_dereq_,module,exports){
 function merge() {
   var n = arguments.length,
       i = -1,
@@ -132,7 +182,7 @@ function merge() {
 }
 
 module.exports = merge;
-},{}],10:[function(_dereq_,module,exports){
+},{}],11:[function(_dereq_,module,exports){
 // Shallow copy
 function copy(obj) {
   if (Array.isArray(obj)) return obj.slice();
@@ -156,6 +206,10 @@ function isArrayOrObject(obj) {
   return typeof obj === 'object';
 }
 
+function isArray(obj) {
+  return Array.isArray(obj);
+}
+
 // Is a value undefined
 function isUndefined(v) {
   return v === void 0;
@@ -165,8 +219,9 @@ module.exports = {
   copy: copy,
   objectKeys: objectKeys,
   isArrayOrObject: isArrayOrObject,
+  isArray: isArray,
   isUndefined: isUndefined
 };
-},{}]},{},[8])
-(8)
+},{}]},{},[9])
+(9)
 });
