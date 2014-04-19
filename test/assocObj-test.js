@@ -1,6 +1,6 @@
 var vows = require('vows'),
     assert = require('assert'),
-    assocObj = require('../src/index').assocObj;
+    assocObj = require('../src/assocObj');
 
 vows.describe('assocObj()').addBatch({
   'Associating': {

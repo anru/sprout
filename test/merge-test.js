@@ -1,6 +1,6 @@
 var vows = require('vows'),
     assert = require('assert'),
-    merge = require('../src/index').merge;
+    merge = require('../src/merge');
 
 vows.describe('merge()').addBatch({
   'Merging': {

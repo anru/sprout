@@ -1,6 +1,6 @@
 var vows = require('vows'),
     assert = require('assert'),
-    get = require('../src/index').get;
+    get = require('../src/get');
 
 vows.describe('get()').addBatch({
   'Getting': {
