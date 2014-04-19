@@ -6,6 +6,8 @@ var get = require('./get'),
     dissocIn = require('./dissocIn'),
     assocObj = require('./assocObj'),
     dissocObj = require('./dissocObj'),
+    update = require('./update'),
+    updateIn = require('./updateIn'),
     merge = require('./merge'),
     util = require('./util');
 
@@ -26,8 +28,15 @@ function multiDissoc(obj, path) {
   return dissocObj(obj, path);
 }
 
+function multiUpdate(obj, path, fn) {
+  if (typeof path === 'string') return update(obj, path, fn);
+  return updateIn(obj, path, fn);
+}
+
 module.exports = {
   get: multiGet,
   assoc: multiAssoc,
-  dissoc: multiDissoc
+  dissoc: multiDissoc,
+  update: multiUpdate,
+  merge: merge
 };

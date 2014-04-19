@@ -9,6 +9,8 @@ var vows = require('vows'),
     dissocIn = require('../src/dissocIn'),
     assocObj = require('../src/assocObj'),
     dissocObj = require('../src/dissocObj'),
+    update = require('../src/update'),
+    updateIn = require('../src/updateIn'),
     merge = require('../src/merge');
 
 vows.describe('sprout').addBatch({
@@ -80,4 +82,26 @@ vows.describe('sprout').addBatch({
       assert.deepEqual(o1, o2);
     }
   }
+}).addBatch({
+  'Updating': {
+    topic: function() {
+      return {
+        foo: 1,
+        bar: 'baz',
+        baz: {blah: 2}
+      };
+    },
+    'a property': function(obj) {
+      var o1 = sprout.update(obj, 'foo', square);
+      var o2 = update(obj, 'foo', square);
+      assert.deepEqual(o1, o2);
+    },
+    'a nested property': function(obj) {
+      var o1 = sprout.update(obj, ['baz', 'blah'], square);
+      var o2 = updateIn(obj, ['baz', 'blah'], square);
+      assert.deepEqual(o1, o2);
+    }
+  }
 }).export(module);
+
+function square(x) { return x * x; }
