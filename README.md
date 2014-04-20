@@ -6,7 +6,7 @@ Change nested JS structures efficiently without mutating them.
 
 ## Rationale
 
-Helps to modify nested pure JavaScript structures (objects and arrays) without mutating them.
+Sprout helps to apply changes to nested plain JavaScript structures (objects and arrays) without mutating them.
 
 It does not deep-clone a structure but only modifies the changed parts, to achieve optimal performance and lets you compare parts with strict equality to detect what has changed.
 
@@ -44,13 +44,8 @@ See tests for more details.
 
 ## Inspiration
 
-* React's [immutability helpers](http://facebook.github.io/react/docs/update.html) but more 'natural' to write. The advantage of React's way is that multiple changes to a structure can be done in one go (this will also be possible with the `model`).
-* The API is modeled after Clojure's `assoc`, `assoc-in`, `get`, `get-in`, etc.
-* [Cortex](https://github.com/mquan/cortex)
-
-## TODO
-
-* `updateIn(path, fn)` where `fn(oldValue) { return oldValue + newValue; }`
+* React's [immutability helper](http://facebook.github.io/react/docs/update.html)
+* Clojure's [Map functions](http://clojuredocs.org/quickref/Clojure%20Core#Collections+-+SequencesMaps)
 
 ## Author
 
