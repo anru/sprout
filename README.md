@@ -2,8 +2,6 @@
 
 Change nested JS structures efficiently without mutating them.
 
-**WARNING** This not ready for production use. Everything can potentially change (including the repo).
-
 ## Rationale
 
 Sprout helps to apply changes to nested plain JavaScript structures (objects and arrays) without mutating them.
