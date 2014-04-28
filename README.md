@@ -10,47 +10,91 @@ It does not deep-clone a structure but only modifies the changed parts, to achie
 
 It does not turn the structure into an immutable one (by calling `Object.freeze` or wrapping it). Therefore it's still possible to mutate the original object if you're not careful.
 
+## Installation
+
+```shell
+npm install sprout-js --save
+```
+
+or
+
+```shell
+bower install sprout-js --save
+```
+
 ## Usage
 
 `obj` won't be changed by all these operations:
 
-```js
-var sprout = require('sprout');
+### assoc(obj, path, value)
 
+```js
+var assoc = require('sprout-js').assoc;
 var obj = {a: 'foo', b: {c: 'bar'}};
 
 // Change a property
-sprout.assoc(obj, 'a', 'baz'); // => {a: 'baz', b: {c: 'bar'}}
+assoc(obj, 'a', 'baz'); // => {a: 'baz', b: {c: 'bar'}}
 
 // Change a nested property
-sprout.assoc(obj, ['b', 'c'], 'baz'); // => {a: 'foo', b: {c: 'baz'}}
+assoc(obj, ['b', 'c'], 'baz'); // => {a: 'foo', b: {c: 'baz'}}
 
 // New objects are created when they don't exist already
-sprout.assoc(obj, ['b', 'd', 'e'], 'baz'); // => {a: 'foo', b: {c: 'bar', d: {e: 'baz'}}}
+assoc(obj, ['b', 'd', 'e'], 'baz'); // => {a: 'foo', b: {c: 'bar', d: {e: 'baz'}}}
 
 // Change multiple nested properties at once
-sprout.assoc(obj, {b: {c: 'baz', d: 'blah'}}); // => {a: 'foo', b: {c: 'baz', d: 'blah'}}
+assoc(obj, {b: {c: 'baz', d: 'blah'}}); // => {a: 'foo', b: {c: 'baz', d: 'blah'}}
+```
+
+### dissoc(obj, path)
+
+```js
+var dissoc = require('sprout-js').dissoc;
+var obj = {a: 'foo', b: {c: 'bar'}};
 
 // Remove a property
-sprout.dissoc(obj, 'a'); // => {b: {c: 'bar'}}
+dissoc(obj, 'a'); // => {b: {c: 'bar'}}
 
 // Remove a nested property (empty objects are removed)
-sprout.dissoc(obj, ['b', 'c']); // => {a: 'foo'}
+dissoc(obj, ['b', 'c']); // => {a: 'foo'}
 
 // Remove multiple nested properties at once (where keys match)
-sprout.dissoc(obj, {b: {c: true}}); // => {a: 'foo'}
+dissoc(obj, {b: {c: true}}); // => {a: 'foo'}
+```
+
+### update(obj, path, fn, [args])
+
+```js
+var update = require('sprout-js').update;
+var obj = {a: 1, b: {c: 2}};
+
+// Update a property
+update(obj, 'a', function(v) { return v + 1; }); // => {a: 2, b: {c: 2}}
+
+// Update a nested property
+update(obj, ['b', 'c'], function(v) { return v + 1; }); // => {a: 1, b: {c: 3}}
+
+// Supply additional arguments to fn
+function add(x, y) { return x + y; }
+update(obj, ['b', 'c'], add, 5); // => {a: 1, b: {c: 7}}
+```
+
+### get(obj, path, [defaultValue])
+
+```js
+var get = require('sprout-js').get;
+var obj = {a: 'foo', b: {c: 'bar'}};
 
 // Get a property
-sprout.get(obj, 'a') // => 'foo'
+get(obj, 'a') // => 'foo'
 
 // Get a nested property
-sprout.get(obj, ['b', 'c']) // => 'bar'
+get(obj, ['b', 'c']) // => 'bar'
 
 // Getting an non-existing property
-sprout.get(obj, ['b', 'd']) // => undefined
+get(obj, ['b', 'd']) // => undefined
 
 // Define a default return value for non-existing properties
-sprout.get(obj, ['b', 'd'], 'not found') // => 'not found'
+get(obj, ['b', 'd'], 'not found') // => 'not found'
 ```
 
 See tests for more details.
