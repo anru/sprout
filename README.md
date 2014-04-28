@@ -49,16 +49,16 @@ assoc(obj, {b: {c: 'baz', d: 'blah'}}); // => {a: 'foo', b: {c: 'baz', d: 'blah'
 
 ```js
 var dissoc = require('sprout-js').dissoc;
-var obj = {a: 'foo', b: {c: 'bar'}};
+var obj = {a: 'foo', b: {c: 'bar', d: 1, e: 'baz'}};
 
 // Remove a property
-dissoc(obj, 'a'); // => {b: {c: 'bar'}}
+dissoc(obj, 'a'); // => {b: {c: 'bar', d: 1, e: 'baz'}}
 
 // Remove a nested property (empty objects are removed)
-dissoc(obj, ['b', 'c']); // => {a: 'foo'}
+dissoc(obj, ['b', 'c']); // => {a: 'foo', b: {d: 1, e: 'baz'}}
 
 // Remove multiple nested properties at once (where keys match)
-dissoc(obj, {b: {c: true}}); // => {a: 'foo'}
+dissoc(obj, {b: {c: true, d: true}}); // => {a: 'foo', b: {e: 'baz'}}
 ```
 
 ### update(obj, path, fn, [args])
