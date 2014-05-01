@@ -29,6 +29,13 @@ vows.describe('assoc()').addBatch({
       var newObj = assoc(obj, 'foo', 1);
       assert.strictEqual(newObj, obj);
       assert.deepEqual(newObj, obj);
+    },
+    'works with arrays too': function() {
+      var arr = [1, 2];
+      var newArr = assoc(arr, 1, 10);
+      assert.deepEqual(newArr, [1, 10]);
+      assert.deepEqual(arr, [1, 2]);
+      assert.isArray(newArr);
     }
   }
 }).export(module);

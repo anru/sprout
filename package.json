@@ -1,11 +1,14 @@
 {
-  "name": "sprout-js",
-  "version": "0.1.2",
-  "description": "Change JS structures efficiently without mutating them",
+  "name": "sprout-object",
+  "version": "0.1.3",
+  "description": "Create updated copies of nested data by reusing unchanged parts and without mutating the original.",
   "main": "src/index.js",
   "repository": "https://github.com/herrstucki/sprout.git",
   "keywords": [
-    "immutable"
+    "immutable",
+    "nested",
+    "object",
+    "array"
   ],
   "scripts": {
     "test": "vows --spec",

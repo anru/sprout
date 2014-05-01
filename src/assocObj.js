@@ -1,6 +1,6 @@
 var copy = require('./util').copy,
     objectKeys = require('./util').objectKeys,
-    isArrayOrObject = require('./util').isArrayOrObject,
+    isObject = require('./util').isObject,
     getIn = require('./getIn');
 
 function assocObj(obj, obj2) {
@@ -13,7 +13,7 @@ function assocObj(obj, obj2) {
   while (++i < n) {
     k = keys[i];
     o2 = obj2[k];
-    if (isArrayOrObject(o2)) {
+    if (isObject(o2)) {
       o[k] = (k in o) ? assocObj(o[k], o2) : assocObj({}, o2);
     } else {
       o[k] = o2;

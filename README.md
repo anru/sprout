@@ -1,25 +1,21 @@
 # Sprout
 
-Change nested JS structures efficiently without mutating them.
+Create updated copies of nested data by reusing unchanged parts and without mutating the original.
 
-## Rationale
+Sprout does not deep-copy data but only modifies the changed parts. This is more performant and memory-efficient than deep copying and lets you compare parts with strict equality to detect what has changed.
 
-Sprout helps to apply changes to nested plain JavaScript structures (objects and arrays) without mutating them.
-
-It does not deep-clone a structure but only modifies the changed parts, to achieve optimal performance and lets you compare parts with strict equality to detect what has changed.
-
-It does not turn the structure into an immutable one (by calling `Object.freeze` or wrapping it). Therefore it's still possible to mutate the original object if you're not careful.
+The data itself will not be made immutable (by calling `Object.freeze` or wrapping it). Therefore it's still possible to mutate the original data using other methods if you're not careful.
 
 ## Installation
 
 ```shell
-npm install sprout-js --save
+npm install sprout-object --save
 ```
 
 or
 
 ```shell
-bower install sprout-js --save
+bower install sprout-object --save
 ```
 
 ## Usage
@@ -29,7 +25,7 @@ bower install sprout-js --save
 ### assoc(obj, path, value)
 
 ```js
-var assoc = require('sprout-js').assoc;
+var assoc = require('sprout-object').assoc;
 var obj = {a: 'foo', b: {c: 'bar'}};
 
 // Change a property
@@ -48,7 +44,7 @@ assoc(obj, {b: {c: 'baz', d: 'blah'}}); // => {a: 'foo', b: {c: 'baz', d: 'blah'
 ### dissoc(obj, path)
 
 ```js
-var dissoc = require('sprout-js').dissoc;
+var dissoc = require('sprout-object').dissoc;
 var obj = {a: 'foo', b: {c: 'bar', d: 1, e: 'baz'}};
 
 // Remove a property
@@ -64,7 +60,7 @@ dissoc(obj, {b: {c: true, d: true}}); // => {a: 'foo', b: {e: 'baz'}}
 ### update(obj, path, fn, [args])
 
 ```js
-var update = require('sprout-js').update;
+var update = require('sprout-object').update;
 var obj = {a: 1, b: {c: 2}};
 
 // Update a property
@@ -81,7 +77,7 @@ update(obj, ['b', 'c'], add, 5); // => {a: 1, b: {c: 7}}
 ### get(obj, path, [defaultValue])
 
 ```js
-var get = require('sprout-js').get;
+var get = require('sprout-object').get;
 var obj = {a: 'foo', b: {c: 'bar'}};
 
 // Get a property
@@ -99,7 +95,7 @@ get(obj, ['b', 'd'], 'not found') // => 'not found'
 
 See tests for more details.
 
-## Inspiration
+## See also
 
 * React's [immutability helper](http://facebook.github.io/react/docs/update.html)
 * Clojure's [Map functions](http://clojuredocs.org/quickref/Clojure%20Core#Collections+-+SequencesMaps)

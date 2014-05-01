@@ -30,7 +30,7 @@ module.exports = assocIn;
 },{"./getIn":8,"./util":13}],3:[function(_dereq_,module,exports){
 var copy = _dereq_('./util').copy,
     objectKeys = _dereq_('./util').objectKeys,
-    isArrayOrObject = _dereq_('./util').isArrayOrObject,
+    isObject = _dereq_('./util').isObject,
     getIn = _dereq_('./getIn');
 
 function assocObj(obj, obj2) {
@@ -43,7 +43,7 @@ function assocObj(obj, obj2) {
   while (++i < n) {
     k = keys[i];
     o2 = obj2[k];
-    if (isArrayOrObject(o2)) {
+    if (isObject(o2)) {
       o[k] = (k in o) ? assocObj(o[k], o2) : assocObj({}, o2);
     } else {
       o[k] = o2;
@@ -85,7 +85,7 @@ module.exports = dissocIn;
 },{"./util":13}],6:[function(_dereq_,module,exports){
 var dissoc = _dereq_('./dissoc'),
     objectKeys = _dereq_('./util').objectKeys,
-    isArrayOrObject = _dereq_('./util').isArrayOrObject,
+    isObject = _dereq_('./util').isObject,
     copy = _dereq_('./util').copy;
 
 function dissocObj(obj, obj2) {
@@ -98,7 +98,7 @@ function dissocObj(obj, obj2) {
   while(++i < n) {
     k = keys[i];
     o2 = obj2[k];
-    if (isArrayOrObject(o2)) {
+    if (isObject(o2)) {
       o[k] = dissocObj(obj[k], o2);
       if (!objectKeys(o[k]).length) delete o[k];
     } else {
@@ -214,9 +214,21 @@ function updateIn(obj, keys, fn) {
 
 module.exports = updateIn;
 },{"./assocIn":2,"./getIn":8}],13:[function(_dereq_,module,exports){
+var _toString = {}.toString;
+
+var isArray = Array.isArray || function(arr) { return _toString.call(arr) === '[object Array]'; };
+
+function isObject(obj) {
+  return typeof obj === 'object';
+}
+
+function isUndefined(v) {
+  return v === void 0;
+}
+
 // Shallow copy
 function copy(obj) {
-  if (Array.isArray(obj)) return obj.slice();
+  if (isArray(obj)) return obj.slice();
   var k,
       newObj = {};
   for (k in obj) {
@@ -233,23 +245,10 @@ function objectKeys(obj) {
   return keys;
 }
 
-function isArrayOrObject(obj) {
-  return typeof obj === 'object';
-}
-
-function isArray(obj) {
-  return Array.isArray(obj);
-}
-
-// Is a value undefined
-function isUndefined(v) {
-  return v === void 0;
-}
-
 module.exports = {
   copy: copy,
   objectKeys: objectKeys,
-  isArrayOrObject: isArrayOrObject,
+  isObject: isObject,
   isArray: isArray,
   isUndefined: isUndefined
 };

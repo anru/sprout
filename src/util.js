@@ -1,6 +1,18 @@
+var _toString = {}.toString;
+
+var isArray = Array.isArray || function(arr) { return _toString.call(arr) === '[object Array]'; };
+
+function isObject(obj) {
+  return typeof obj === 'object';
+}
+
+function isUndefined(v) {
+  return v === void 0;
+}
+
 // Shallow copy
 function copy(obj) {
-  if (Array.isArray(obj)) return obj.slice();
+  if (isArray(obj)) return obj.slice();
   var k,
       newObj = {};
   for (k in obj) {
@@ -17,23 +29,10 @@ function objectKeys(obj) {
   return keys;
 }
 
-function isArrayOrObject(obj) {
-  return typeof obj === 'object';
-}
-
-function isArray(obj) {
-  return Array.isArray(obj);
-}
-
-// Is a value undefined
-function isUndefined(v) {
-  return v === void 0;
-}
-
 module.exports = {
   copy: copy,
   objectKeys: objectKeys,
-  isArrayOrObject: isArrayOrObject,
+  isObject: isObject,
   isArray: isArray,
   isUndefined: isUndefined
 };
