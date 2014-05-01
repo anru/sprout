@@ -1,10 +1,27 @@
 # Sprout
 
-Create updated copies of nested data by reusing unchanged parts and without mutating the original.
+Using Sprout you can create updated copies of nested data efficiently. The original data is not mutated.
 
-Sprout does not deep-copy data but only modifies the changed parts. This is more performant and memory-efficient than deep copying and lets you compare parts with strict equality to detect what has changed.
+Sprout does not deep-copy data but re-uses unmodified parts. This is more performant and memory-efficient than deep copying. It also lets you compare parts with strict equality to detect what has changed. Consider the following scenario:
 
-The data itself will not be made immutable (by calling `Object.freeze` or wrapping it). Therefore it's still possible to mutate the original data using other methods if you're not careful.
+```js
+var assoc = require('sprout-object').assoc;
+
+var data = {
+  a: {b: {c: 1}},
+  x: {y: {z: 1}}
+};
+
+var updatedData = assoc(data, ['a', 'b', 'c'], 2);
+```
+
+* `updatedData.a.b.c === 2`
+* `data` is not mutated, therefore `data.a.b.c === 1`
+* The objects `updatedData.x` and `updatedData.x.y` are re-used from `data`, therefore `updatedData.x === data.x` and `updatedData.x.y === data.x.y` (and of course `updatedData.x.y.z === data.x.y.z`)
+
+This has several useful applications. For example you could modify an application's state using Sprout and store each step in an array to get instant undo functionality. Or you could only re-render changed subtrees of your application.
+
+The data itself is not made immutable (by calling `Object.freeze` or wrapping it). Therefore it's still possible to mutate the original data using other methods if you're not careful.
 
 ## Installation
 
