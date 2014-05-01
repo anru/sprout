@@ -19,7 +19,7 @@ var updatedData = assoc(data, ['a', 'b', 'c'], 2);
 * `data` is not mutated, therefore `data.a.b.c === 1`
 * The objects `updatedData.x` and `updatedData.x.y` are re-used from `data`, therefore `updatedData.x === data.x` and `updatedData.x.y === data.x.y` (and of course `updatedData.x.y.z === data.x.y.z`)
 
-This has several useful applications. For example you could modify an application's state using Sprout and store each step in an array to get instant undo functionality. Or you could only re-render changed subtrees of your application.
+This has several useful applications. For example you could modify an application's state using Sprout and store each step in an array to get instant undo functionality. Or you could only re-render changed subtrees of your application by comparing for strict equality.
 
 The data itself is not made immutable (by calling `Object.freeze` or wrapping it). Therefore it's still possible to mutate the original data using other methods if you're not careful.
 
