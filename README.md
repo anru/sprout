@@ -5,7 +5,7 @@ Using Sprout you can create updated copies of nested data efficiently. The origi
 Sprout does not deep-copy data but re-uses unmodified parts. This is more performant and memory-efficient than deep copying. It also lets you compare parts with strict equality to detect what has changed. Consider the following scenario:
 
 ```js
-var assoc = require('sprout-object').assoc;
+var assoc = require('sprout-data').assoc;
 
 var data = {
   a: {b: {c: 1}},
@@ -26,13 +26,13 @@ The data itself is not made immutable (by calling `Object.freeze` or wrapping it
 ## Installation
 
 ```shell
-npm install sprout-object --save
+npm install sprout-data --save
 ```
 
 or
 
 ```shell
-bower install sprout-object --save
+bower install sprout-data --save
 ```
 
 ## Usage
@@ -42,7 +42,7 @@ bower install sprout-object --save
 ### assoc(obj, path, value)
 
 ```js
-var assoc = require('sprout-object').assoc;
+var assoc = require('sprout-data').assoc;
 var obj = {a: 'foo', b: {c: 'bar'}};
 
 // Change a property
@@ -61,7 +61,7 @@ assoc(obj, {b: {c: 'baz', d: 'blah'}}); // => {a: 'foo', b: {c: 'baz', d: 'blah'
 ### dissoc(obj, path)
 
 ```js
-var dissoc = require('sprout-object').dissoc;
+var dissoc = require('sprout-data').dissoc;
 var obj = {a: 'foo', b: {c: 'bar', d: 1, e: 'baz'}};
 
 // Remove a property
@@ -77,7 +77,7 @@ dissoc(obj, {b: {c: true, d: true}}); // => {a: 'foo', b: {e: 'baz'}}
 ### update(obj, path, fn, [args])
 
 ```js
-var update = require('sprout-object').update;
+var update = require('sprout-data').update;
 var obj = {a: 1, b: {c: 2}};
 
 // Update a property
@@ -94,7 +94,7 @@ update(obj, ['b', 'c'], add, 5); // => {a: 1, b: {c: 7}}
 ### get(obj, path, [defaultValue])
 
 ```js
-var get = require('sprout-object').get;
+var get = require('sprout-data').get;
 var obj = {a: 'foo', b: {c: 'bar'}};
 
 // Get a property
