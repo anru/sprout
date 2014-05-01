@@ -31,6 +31,7 @@ module.exports = assocIn;
 var copy = _dereq_('./util').copy,
     objectKeys = _dereq_('./util').objectKeys,
     isObject = _dereq_('./util').isObject,
+    isArray = _dereq_('./util').isArray,
     getIn = _dereq_('./getIn');
 
 function assocObj(obj, obj2) {
@@ -44,7 +45,7 @@ function assocObj(obj, obj2) {
     k = keys[i];
     o2 = obj2[k];
     if (isObject(o2)) {
-      o[k] = (k in o) ? assocObj(o[k], o2) : assocObj({}, o2);
+      o[k] = (k in o) ? assocObj(o[k], o2) : assocObj(isArray(o2) ? [] : {}, o2); // Just assigning o2 to o[k] when k is not in o would be faster but less safe because we'd keep a reference to o2
     } else {
       o[k] = o2;
     }

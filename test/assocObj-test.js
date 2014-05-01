@@ -40,5 +40,13 @@ vows.describe('assocObj()').addBatch({
       assert.deepEqual(obj, {a: 1, b: {c: 2}});
       assert.strictEqual(newObj.b, obj.b);
     },
+    'an array': function() {
+      var obj = {};
+      var newObj = assocObj({}, {arr: [1, 2, 3]});
+      assert.notStrictEqual(newObj, obj);
+      assert.deepEqual(newObj, {arr: [1, 2, 3]});
+      assert.isArray(newObj.arr);
+      assert.deepEqual(obj, {});
+    },
   }
 }).export(module);
