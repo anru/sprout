@@ -102,6 +102,30 @@ vows.describe('sprout').addBatch({
       assert.deepEqual(o1, o2);
     }
   }
+}).addBatch({
+  'Batching changes with sprout()': {
+    topic: function() {
+      return {
+        foo: 1,
+        bar: 'baz',
+        baz: {blah: 2}
+      };
+    },
+    'one property': function(obj) {
+      var o1 = sprout()
+        .assoc('foo', 2)(obj);
+      var o2 = assoc(obj, 'foo', 2);
+      assert.deepEqual(o1, o2);
+    },
+    'multiple properties': function(obj) {
+      var o1 = sprout()
+        .assoc('foo', 2)
+        .update(['baz', 'blah'], square)
+        .dissoc('bar')(obj);
+      var o2 = dissoc(updateIn(assoc(obj, 'foo', 2), ['baz', 'blah'], square), 'bar');
+      assert.deepEqual(o1, o2);
+    },
+  }
 }).export(module);
 
 function square(x) { return x * x; }

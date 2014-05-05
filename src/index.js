@@ -33,10 +33,46 @@ function multiUpdate(obj, path, fn) {
   return updateIn(obj, path, fn);
 }
 
-module.exports = {
-  get: multiGet,
-  assoc: multiAssoc,
-  dissoc: multiDissoc,
-  update: multiUpdate,
-  merge: merge
-};
+function partialRest(fn) {
+  var args = Array.prototype.slice.call(arguments, 1);
+  return function(a) {
+    return fn.apply(this, [a].concat(args));
+  };
+}
+
+function sprout() {
+  var operations = [];
+
+  function s(obj) {
+    var o = obj;
+    for (var i = 0, n = operations.length; i < n; ++i) {
+      o = operations[i](o);
+    }
+    return o;
+  }
+
+  s.assoc = function(path, value) {
+    operations.push(partialRest(multiAssoc, path, value));
+    return s;
+  };
+
+  s.dissoc = function(path) {
+    operations.push(partialRest(multiDissoc, path));
+    return s;
+  };
+
+  s.update = function(path, fn) {
+    operations.push(partialRest(multiUpdate, path, fn));
+    return s;
+  };
+
+  return s;
+}
+
+sprout.get = multiGet;
+sprout.assoc = multiAssoc;
+sprout.dissoc = multiDissoc;
+sprout.update = multiUpdate;
+sprout.merge = merge;
+
+module.exports = sprout;
