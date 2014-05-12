@@ -33,15 +33,15 @@ function multiUpdate(obj, path, fn) {
   return updateIn(obj, path, fn);
 }
 
-function partialRest(fn) {
+function partialRight(fn) {
   var args = Array.prototype.slice.call(arguments, 1);
   return function(a) {
     return fn.apply(this, [a].concat(args));
   };
 }
 
-function sprout() {
-  var operations = [];
+function sprout(operations) {
+  if (!util.isArray(operations)) operations = [];
 
   function s(obj) {
     var o = obj;
@@ -52,18 +52,19 @@ function sprout() {
   }
 
   s.assoc = function(path, value) {
-    operations.push(partialRest(multiAssoc, path, value));
-    return s;
+    return sprout(operations.concat(partialRight(multiAssoc, path, value)));
   };
 
   s.dissoc = function(path) {
-    operations.push(partialRest(multiDissoc, path));
-    return s;
+    return sprout(operations.concat(partialRight(multiDissoc, path)));
   };
 
   s.update = function(path, fn) {
-    operations.push(partialRest(multiUpdate, path, fn));
-    return s;
+    return sprout(operations.concat(partialRight(multiUpdate, path, fn)));
+  };
+
+  s.get = function(path) {
+    return sprout(operations.concat(partialRight(multiGet, path)));
   };
 
   return s;

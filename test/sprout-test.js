@@ -125,6 +125,29 @@ vows.describe('sprout').addBatch({
       var o2 = dissoc(updateIn(assoc(obj, 'foo', 2), ['baz', 'blah'], square), 'bar');
       assert.deepEqual(o1, o2);
     },
+    'create a getter': function(obj) {
+      var getFoo = sprout().get('foo');
+      assert.equal(getFoo(obj), 1);
+    },
+    'deriving a getter from another getter does not change the original getter': function(obj) {
+      var getBaz = sprout().get('baz');
+      var getBlah = getBaz.get('blah');
+      assert.deepEqual(getBaz(obj), {blah: 2});
+      assert.equal(getBlah(obj), 2);
+    },
+    'derive a assoc from a getter': function(obj) {
+      var getBaz = sprout().get('baz');
+      var assocBlah = getBaz.assoc('blah', 3); // Well, this isn't entirely useful
+      assert.deepEqual(getBaz(obj), {blah: 2});
+      assert.deepEqual(assocBlah(obj), {blah: 3}); // This really should rather return the whole changed obj
+
+      // This would be preferred:
+
+      // var cursor = sprout(obj);
+      // var bazCursor = cursor.get('baz');
+      
+
+    },
   }
 }).export(module);
 
