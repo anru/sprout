@@ -18,8 +18,8 @@ vows.describe('getIn()').addBatch({
       assert.isUndefined(getIn(obj, ['bar', 'foo']));
     },
     'a non-existing property returns the default value if provided': function(obj) {
-      assert.equal(getIn(obj, ['foo', 'bar'], 2), 1);
-      assert.equal(getIn(obj, ['bar', 'foo'], 2), 2);
+      assert.equal(getIn(obj, ['foo', 'not-there'], 42), 42);
+      assert.equal(getIn(obj, ['not-there'], 42), 42);
     },
   }
 }).export(module);

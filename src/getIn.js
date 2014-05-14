@@ -5,7 +5,7 @@ function getIn(obj, keys, orValue) {
   var k = keys[0],
       ks = keys.slice(1);
   if (!obj.hasOwnProperty(k)) return isUndefined(orValue) ? void 0 : orValue;
-  return ks.length ? getIn(obj[k], ks) : obj[k];
+  return ks.length ? getIn(obj[k], ks, orValue) : obj[k];
 }
 
 module.exports = getIn;
