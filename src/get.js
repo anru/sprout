@@ -1,7 +1,9 @@
-var isUndefined = require('./util').isUndefined;
+var isUndefined = require('./util').isUndefined,
+    isNull = require('./util').isNull,
+    isObject = require('./util').isObject;
 
 function get(obj, k, orValue) {
-  if (!(k in obj)) return isUndefined(orValue) ? void 0 : orValue;
+  if (!isObject(obj) || isNull(obj) || !(k in obj)) return isUndefined(orValue) ? void 0 : orValue;
   return obj[k];
 }
 

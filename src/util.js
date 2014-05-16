@@ -10,6 +10,10 @@ function isUndefined(v) {
   return v === void 0;
 }
 
+function isNull(v) {
+  return v === null;
+}
+
 // Shallow copy
 function copy(obj) {
   if (isArray(obj)) return obj.slice();
@@ -34,5 +38,6 @@ module.exports = {
   objectKeys: objectKeys,
   isObject: isObject,
   isArray: isArray,
-  isUndefined: isUndefined
+  isUndefined: isUndefined,
+  isNull: isNull
 };

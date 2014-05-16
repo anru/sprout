@@ -111,22 +111,26 @@ function dissocObj(obj, obj2) {
 
 module.exports = dissocObj;
 },{"./dissoc":4,"./util":13}],7:[function(_dereq_,module,exports){
-var isUndefined = _dereq_('./util').isUndefined;
+var isUndefined = _dereq_('./util').isUndefined,
+    isNull = _dereq_('./util').isNull,
+    isObject = _dereq_('./util').isObject;
 
 function get(obj, k, orValue) {
-  if (!(k in obj)) return isUndefined(orValue) ? void 0 : orValue;
+  if (!isObject(obj) || isNull(obj) || !(k in obj)) return isUndefined(orValue) ? void 0 : orValue;
   return obj[k];
 }
 
 module.exports = get;
 },{"./util":13}],8:[function(_dereq_,module,exports){
-var isUndefined = _dereq_('./util').isUndefined;
+var isUndefined = _dereq_('./util').isUndefined,
+    isNull = _dereq_('./util').isNull,
+    isObject = _dereq_('./util').isObject;
 
 // Get value from a nested structure or null.
 function getIn(obj, keys, orValue) {
   var k = keys[0],
       ks = keys.slice(1);
-  if (!obj.hasOwnProperty(k)) return isUndefined(orValue) ? void 0 : orValue;
+  if (!isObject(obj) || isNull(obj) || !(k in obj)) return isUndefined(orValue) ? void 0 : orValue;
   return ks.length ? getIn(obj[k], ks, orValue) : obj[k];
 }
 
@@ -227,6 +231,10 @@ function isUndefined(v) {
   return v === void 0;
 }
 
+function isNull(v) {
+  return v === null;
+}
+
 // Shallow copy
 function copy(obj) {
   if (isArray(obj)) return obj.slice();
@@ -251,7 +259,8 @@ module.exports = {
   objectKeys: objectKeys,
   isObject: isObject,
   isArray: isArray,
-  isUndefined: isUndefined
+  isUndefined: isUndefined,
+  isNull: isNull
 };
 },{}]},{},[9])
 (9)

@@ -12,8 +12,12 @@ vows.describe('get()').addBatch({
     'an existing property returns the value': function(obj) {
       assert.equal(get(obj, 'foo'), 1);
     },
-    'a non-existing property returns null by default': function(obj) {
+    'a non-existing property returns undefined by default': function(obj) {
       assert.isUndefined(get(obj, 'bar'));
+    },
+    'a property on a null or undefined object returns undefined by default': function(obj) {
+      assert.isUndefined(get(null, 'bar'));
+      assert.isUndefined(get(undefined, 'bar'));
     },
     'a non-existing property returns the default value if provided': function(obj) {
       assert.equal(get(obj, 'foo', 2), 1);
