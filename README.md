@@ -1,6 +1,6 @@
 # Sprout
 
-Sprout is a collection of functions to make your life easier when dealing with nested data in JavaScript. Sprout never changes the original data but returns new versions. This way, plain JavaScript objects (and arrays) can be effectively treated as if they were immutable.
+Sprout is a collection of functions to make your life easier when dealing with nested data in JavaScript. Sprout never mutates the original data but returns new versions. This way, plain JavaScript objects (and arrays) can be effectively treated as if they were immutable.
 
 For example you could modify application state using Sprout and store each version in an array to get instant undo/redo functionality. Or you could only re-render changed subtrees of the application state by comparing with strict equality between versions.
 
