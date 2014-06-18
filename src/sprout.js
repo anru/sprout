@@ -11,8 +11,8 @@ var get = require('./get'),
     util = require('./util');
 
 function multiGet(obj, path, orValue) {
-  if (typeof path === 'string' || typeof path === 'number') return get(obj, path, orValue);
-  return getIn(obj, path, orValue);
+  if (util.isArray(path)) return getIn(obj, path, orValue);
+  return get(obj, path, orValue);
 }
 
 function multiAssoc(obj, path, value) {
@@ -26,8 +26,8 @@ function multiDissoc(obj, path) {
 }
 
 function multiUpdate(obj, path, fn) {
-  if (typeof path === 'string' || typeof path === 'number') return update(obj, path, fn);
-  return updateIn(obj, path, fn);
+  if (util.isArray(path)) return updateIn(obj, path, fn);
+  return update(obj, path, fn);
 }
 
 module.exports = {
