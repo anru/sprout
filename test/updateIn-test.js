@@ -22,8 +22,14 @@ vows.describe('updateIn()').addBatch({
       assert.deepEqual(newObj, {a: 1, b: {c: 5}});
       assert.deepEqual(obj, {a: 1, b: {c: 2}});
     },
+    'when updating does not change a value, return the original object': function(obj) {
+      var newObj = updateIn(obj, ['b', 'c'], identity);
+      assert.deepEqual(newObj, obj);
+      assert.strictEqual(newObj, obj);
+    },
   }
 }).export(module);
 
 function square(x) { return x * x; }
 function add(x, y) { return x + y; }
+function identity(x) { return x; }
