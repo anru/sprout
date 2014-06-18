@@ -2,7 +2,7 @@
   "name": "sprout-data",
   "version": "0.1.11",
   "description": "Create updated copies of nested data by reusing unchanged parts and without mutating the original.",
-  "main": "src/index.js",
+  "main": "src/sprout.js",
   "repository": "https://github.com/herrstucki/sprout.git",
   "keywords": [
     "immutable",
@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "test": "vows --spec",
-    "build": "browserify -s sprout -o sprout.js -- src/index.js && uglifyjs -o sprout.min.js -- sprout.js"
+    "build": "browserify -s sprout -o sprout.js -- src/sprout.js && uglifyjs -o sprout.min.js -- sprout.js"
   },
   "author": "Jeremy Stucki",
   "license": "BSD",

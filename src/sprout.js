@@ -4,7 +4,7 @@ var get = require('./get'),
     dissoc = require('./dissoc'),
     assocIn = require('./assocIn'),
     dissocIn = require('./dissocIn'),
-    assocObj = require('./assocObj'),
+    deepMerge = require('./deepMerge'),
     dissocObj = require('./dissocObj'),
     update = require('./update'),
     updateIn = require('./updateIn'),
@@ -17,9 +17,8 @@ function multiGet(obj, path, orValue) {
 }
 
 function multiAssoc(obj, path, value) {
-  if (typeof path === 'string' || typeof path === 'number') return assoc(obj, path, value);
-  if (!util.isUndefined(value) && util.isArray(path)) return assocIn(obj, path, value);
-  return assocObj(obj, path);
+  if (util.isArray(path)) return assocIn(obj, path, value);
+  return assoc(obj, path, value);
 }
 
 function multiDissoc(obj, path) {
@@ -38,5 +37,6 @@ module.exports = {
   assoc: multiAssoc,
   dissoc: multiDissoc,
   update: multiUpdate,
-  merge: merge
+  merge: merge,
+  deepMerge: deepMerge
 };

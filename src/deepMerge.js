@@ -5,7 +5,7 @@ var copy = require('./util').copy,
     isNull = require('./util').isNull,
     getIn = require('./getIn');
 
-function assocObj(obj, obj2) {
+function deepMerge(obj, obj2) {
   var keys = objectKeys(obj2),
       n = keys.length,
       i = -1,
@@ -16,7 +16,7 @@ function assocObj(obj, obj2) {
     k = keys[i];
     o2 = obj2[k];
     if (isObject(o2) && !isNull(o2)) {
-      o[k] = (k in o) ? assocObj(o[k], o2) : assocObj(isArray(o2) ? [] : {}, o2); // Just assigning o2 to o[k] when k is not in o would be faster but less safe because we'd keep a reference to o2
+      o[k] = (k in o) ? deepMerge(o[k], o2) : deepMerge(isArray(o2) ? [] : {}, o2); // Just assigning o2 to o[k] when k is not in o would be faster but less safe because we'd keep a reference to o2
     } else {
       o[k] = o2;
     }
@@ -24,4 +24,4 @@ function assocObj(obj, obj2) {
   return o;
 }
 
-module.exports = assocObj;
+module.exports = deepMerge;

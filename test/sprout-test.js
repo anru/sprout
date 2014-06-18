@@ -1,13 +1,13 @@
 var vows = require('vows'),
     assert = require('assert'),
-    sprout = require('../src/index'),
+    sprout = require('../src/sprout'),
     get = require('../src/get'),
     getIn = require('../src/getIn'),
     assoc = require('../src/assoc'),
     dissoc = require('../src/dissoc'),
     assocIn = require('../src/assocIn'),
     dissocIn = require('../src/dissocIn'),
-    assocObj = require('../src/assocObj'),
+    deepMerge = require('../src/deepMerge'),
     dissocObj = require('../src/dissocObj'),
     update = require('../src/update'),
     updateIn = require('../src/updateIn'),
@@ -55,11 +55,6 @@ vows.describe('sprout').addBatch({
     'a nested property': function(obj) {
       var o1 = sprout.assoc(obj, ['foo', 'bar'], 2);
       var o2 = assocIn(obj, ['foo', 'bar'], 2);
-      assert.deepEqual(o1, o2);
-    },
-    'multiple properties': function(obj) {
-      var o1 = sprout.assoc(obj, {foo: 2, bar: 'blah'});
-      var o2 = assocObj(obj, {foo: 2, bar: 'blah'});
       assert.deepEqual(o1, o2);
     },
     'an array property': function() {
