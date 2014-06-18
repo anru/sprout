@@ -1,8 +1,12 @@
 # Sprout
 
-Using Sprout you can create updated copies of nested data efficiently. The original data is not mutated.
+Sprout is a collection of functions to make your life easier when dealing with nested data in JavaScript. Sprout never changes the original data but returns new versions. This way, plain JavaScript objects (and arrays) can be effectively treated as if they were immutable.
 
-Sprout does not deep-copy data but re-uses unmodified parts. This is more performant and memory-efficient than deep copying. It also lets you compare parts with strict equality to detect what has changed. Consider the following scenario:
+For example you could modify application state using Sprout and store each version in an array to get instant undo/redo functionality. Or you could only re-render changed subtrees of the application state by comparing with strict equality between versions.
+
+## How Sprout works
+
+For efficiency, Sprout uses *structural sharing*. This means it does not naively deep-copy data but re-uses unmodified parts. This is more performant and memory-efficient than deep copying. It also lets you compare parts with strict equality to detect what has changed. Consider the following scenario:
 
 ```js
 var assoc = require('sprout-data').assoc;
@@ -19,7 +23,17 @@ var updatedData = assoc(data, ['a', 'b', 'c'], 2);
 * `data` is not mutated, therefore `data.a.b.c === 1`
 * The objects `updatedData.x` and `updatedData.x.y` are re-used from `data`, therefore `updatedData.x === data.x` and `updatedData.x.y === data.x.y` (and of course `updatedData.x.y.z === data.x.y.z`)
 
-This has several useful applications. For example you could modify an application's state using Sprout and store each step in an array to get instant undo functionality. Or you could only re-render changed subtrees of your application by comparing for strict equality.
+Additionally, most of Sprout's functions return the original data when they haven't changed anything.
+
+```js
+var assoc = require('sprout-data').assoc;
+
+var data = {a: 1};
+
+var updatedData = assoc(data, 'a', 1);
+```
+
+In this case, `updatedData === data`.
 
 The data itself is not made immutable (by calling `Object.freeze` or wrapping it). Therefore it's still possible to mutate the original data using other methods if you're not careful.
 
@@ -35,11 +49,37 @@ or
 bower install sprout-data --save
 ```
 
-## Usage
+## API
 
-`obj` won't be changed by all these operations:
+The *path* argument can be a single key or an array of keys to access nested properties.
 
-### assoc(obj, path, value)
+### get(obj, path, [defaultValue])
+
+Get a (nested) property from an object. Returns `undefined` or – if provided – the *defaultValue* if any key in the path doesn't exist.
+
+```js
+var get = require('sprout-data').get;
+var obj = {a: 'foo', b: {c: 'bar'}};
+
+// Get a property
+get(obj, 'a') // => 'foo'
+
+// Get a nested property
+get(obj, ['b', 'c']) // => 'bar'
+
+// Getting an non-existing property
+get(obj, ['b', 'd']) // => undefined
+
+// Gracefully handles non-existing keys (as opposed to obj.x.y which would throw an error because it can't access y of obj.x)
+get(obj, ['x', 'y']) // => undefined
+
+// Define a default return value for non-existing properties
+get(obj, ['b', 'd'], 'not found') // => 'not found'
+```
+
+### assoc(obj, path, value, [path2, value2, ...])
+
+Assigns a value to a *path* in *obj*. Multiple path-value pairs can be specified.
 
 ```js
 var assoc = require('sprout-data').assoc;
@@ -55,10 +95,12 @@ assoc(obj, ['b', 'c'], 'baz'); // => {a: 'foo', b: {c: 'baz'}}
 assoc(obj, ['b', 'd', 'e'], 'baz'); // => {a: 'foo', b: {c: 'bar', d: {e: 'baz'}}}
 
 // Change multiple nested properties at once
-assoc(obj, {b: {c: 'baz', d: 'blah'}}); // => {a: 'foo', b: {c: 'baz', d: 'blah'}}
+assoc(obj, ['b', 'c'], 'baz', ['b', 'd'], 'blah'}}); // => {a: 'foo', b: {c: 'baz', d: 'blah'}}
 ```
 
-### dissoc(obj, path)
+### dissoc(obj, path, [path2, ...])
+
+Removes a property at *path* from *obj*. Multiple paths can be specified to remove multiple properties. If all properties are removed from an object, the object itself will also be removed.
 
 ```js
 var dissoc = require('sprout-data').dissoc;
@@ -71,10 +113,15 @@ dissoc(obj, 'a'); // => {b: {c: 'bar', d: 1, e: 'baz'}}
 dissoc(obj, ['b', 'c']); // => {a: 'foo', b: {d: 1, e: 'baz'}}
 
 // Remove multiple nested properties at once (where keys match)
-dissoc(obj, {b: {c: true, d: true}}); // => {a: 'foo', b: {e: 'baz'}}
+dissoc(obj, ['b', 'c'], ['b', 'd']); // => {a: 'foo', b: {e: 'baz'}}
+
+// Removing all properties of an object also removes the object from its parent
+dissoc(obj, ['b', 'c'], ['b', 'd'], ['b', 'e']); // => {a: 'foo'}
 ```
 
 ### update(obj, path, fn, [args])
+
+Applies *fn* to a property at *path* from *obj*. Optional *args* will be supplied to *fn*.
 
 ```js
 var update = require('sprout-data').update;
@@ -91,31 +138,42 @@ function add(x, y) { return x + y; }
 update(obj, ['b', 'c'], add, 5); // => {a: 1, b: {c: 7}}
 ```
 
-### get(obj, path, [defaultValue])
+### merge(obj, obj2, [obj3, ...])
+
+(Shallow) merge *obj2*'s properties into *obj*. Properties of the rightmost object will override existing properties.
 
 ```js
-var get = require('sprout-data').get;
-var obj = {a: 'foo', b: {c: 'bar'}};
+var merge = require('sprout-data').merge;
+var obj = {a: 1, b: {c: 2}};
 
-// Get a property
-get(obj, 'a') // => 'foo'
+// Merge
+merge(obj, {d: 5}); // => {a: 1, b: {c: 2}, d: 5}
 
-// Get a nested property
-get(obj, ['b', 'c']) // => 'bar'
+// Merge multiple objects
+merge(obj, {d: 5, e: 6}, {d: 10}); // => {a: 1, b: {c: 2}, d: 10, e: 6}
+```
 
-// Getting an non-existing property
-get(obj, ['b', 'd']) // => undefined
+### deepMerge(obj, obj2, [obj3, ...])
 
-// Define a default return value for non-existing properties
-get(obj, ['b', 'd'], 'not found') // => 'not found'
+Deep-merge *obj2*'s properties into *obj*. Properties of the rightmost object will override existing properties. Non-existing objects will be created.
+
+```js
+var deepMerge = require('sprout-data').deepMerge;
+var obj = {a: 1, b: {c: 2, d: 3}};
+
+// Deep merge
+deepMerge(obj, {b: {d: 5}}); // => {a: 1, b: {c: 2, d: 5}}
+
+// Non-existing objects along the path will be created
+deepMerge(obj, {x: {y: 42}}); // => {a: 1, b: {c: 2, d: 3}, x: {y: 42}}
 ```
 
 See tests for more details.
 
-## See also
+## Inspiration
 
-* React's [immutability helper](http://facebook.github.io/react/docs/update.html)
-* Clojure's [Map functions](http://clojuredocs.org/quickref/Clojure%20Core#Collections+-+SequencesMaps)
+* The API is heavily inspired by Clojure's [Map functions](http://clojuredocs.org/quickref/Clojure%20Core#Collections+-+SequencesMaps).
+* The same structural sharing approach is used by React's [immutability helper](http://facebook.github.io/react/docs/update.html).
 
 ## Author
 
