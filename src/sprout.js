@@ -1,7 +1,6 @@
 var get = require('./get'),
     getIn = require('./getIn'),
-    assoc = require('./assoc'),
-    assocIn = require('./assocIn'),
+    multiAssoc = require('./multiAssoc'),
     multiDissoc = require('./multiDissoc'),
     deepMerge = require('./deepMerge'),
     update = require('./update'),
@@ -12,11 +11,6 @@ var get = require('./get'),
 function multiGet(obj, path, orValue) {
   if (util.isArray(path)) return getIn(obj, path, orValue);
   return get(obj, path, orValue);
-}
-
-function multiAssoc(obj, path, value) {
-  if (util.isArray(path)) return assocIn(obj, path, value);
-  return assoc(obj, path, value);
 }
 
 function multiUpdate(obj, path, fn) {

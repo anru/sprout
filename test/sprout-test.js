@@ -39,31 +39,6 @@ vows.describe('sprout').addBatch({
     }
   }
 }).addBatch({
-  'Associating': {
-    topic: function() {
-      return {
-        foo: 1,
-        bar: 'baz'
-      };
-    },
-    'a property': function(obj) {
-      var o1 = sprout.assoc(obj, 'foo', 2);
-      var o2 = assoc(obj, 'foo', 2);
-      assert.deepEqual(o1, o2);
-    },
-    'a nested property': function(obj) {
-      var o1 = sprout.assoc(obj, ['foo', 'bar'], 2);
-      var o2 = assocIn(obj, ['foo', 'bar'], 2);
-      assert.deepEqual(o1, o2);
-    },
-    'an array property': function() {
-      var arr = [1, 2, 3]
-      var o1 = sprout.assoc(arr, 2, 5);
-      var o2 = assoc(arr, 2, 5);
-      assert.deepEqual(o1, o2);
-    }
-  }
-}).addBatch({
   'Updating': {
     topic: function() {
       return {
