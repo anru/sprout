@@ -1,4 +1,4 @@
-var getIn = require('./getIn')
+var getIn = require('./getIn'),
     assocIn = require('./assocIn');
 
 function updateIn(obj, keys, fn) {
