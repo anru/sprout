@@ -9,7 +9,7 @@ function assoc(obj, k, value) {
 }
 
 module.exports = assoc;
-},{"./util":13}],2:[function(_dereq_,module,exports){
+},{"./util":17}],2:[function(_dereq_,module,exports){
 var copy = _dereq_('./util').copy,
     getIn = _dereq_('./getIn');
 
@@ -27,7 +27,7 @@ function assocIn(obj, keys, value) {
 }
 
 module.exports = assocIn;
-},{"./getIn":8,"./util":13}],3:[function(_dereq_,module,exports){
+},{"./getIn":7,"./util":17}],3:[function(_dereq_,module,exports){
 var copy = _dereq_('./util').copy,
     objectKeys = _dereq_('./util').objectKeys,
     isObject = _dereq_('./util').isObject,
@@ -35,7 +35,7 @@ var copy = _dereq_('./util').copy,
     isNull = _dereq_('./util').isNull,
     getIn = _dereq_('./getIn');
 
-function assocObj(obj, obj2) {
+function deepMerge(obj, obj2) {
   var keys = objectKeys(obj2),
       n = keys.length,
       i = -1,
@@ -46,7 +46,7 @@ function assocObj(obj, obj2) {
     k = keys[i];
     o2 = obj2[k];
     if (isObject(o2) && !isNull(o2)) {
-      o[k] = (k in o) ? assocObj(o[k], o2) : assocObj(isArray(o2) ? [] : {}, o2); // Just assigning o2 to o[k] when k is not in o would be faster but less safe because we'd keep a reference to o2
+      o[k] = (k in o) ? deepMerge(o[k], o2) : deepMerge(isArray(o2) ? [] : {}, o2); // Just assigning o2 to o[k] when k is not in o would be faster but less safe because we'd keep a reference to o2
     } else {
       o[k] = o2;
     }
@@ -54,8 +54,22 @@ function assocObj(obj, obj2) {
   return o;
 }
 
-module.exports = assocObj;
-},{"./getIn":8,"./util":13}],4:[function(_dereq_,module,exports){
+function variadicDeepMerge() {
+  var n = arguments.length,
+      i = 0,
+      o = arguments[0],
+      obj;
+
+  while (++i < n) {
+    obj = arguments[i];
+    o = deepMerge(o, obj);
+  }
+
+  return o;
+}
+
+module.exports = variadicDeepMerge;
+},{"./getIn":7,"./util":17}],4:[function(_dereq_,module,exports){
 var copy = _dereq_('./util').copy;
 
 function dissoc(obj, k) {
@@ -66,17 +80,18 @@ function dissoc(obj, k) {
 }
 
 module.exports = dissoc;
-},{"./util":13}],5:[function(_dereq_,module,exports){
-var copy = _dereq_('./util').copy,
-    objectKeys = _dereq_('./util').objectKeys;
+},{"./util":17}],5:[function(_dereq_,module,exports){
+var util = _dereq_('./util'),
+    hasIn = _dereq_('./hasIn');
 
 function dissocIn(obj, keys) {
+  if (!hasIn(obj, keys)) return obj;
   var k = keys[0],
       ks = keys.slice(1),
-      o = copy(obj);
+      o = util.copy(obj);
   if (ks.length) {
     o[k] = dissocIn(obj[k], ks);
-    if (!objectKeys(o[k]).length) delete o[k];
+    if (!util.objectKeys(o[k]).length) delete o[k];
   } else {
     delete o[k];
   }
@@ -84,102 +99,57 @@ function dissocIn(obj, keys) {
 }
 
 module.exports = dissocIn;
-},{"./util":13}],6:[function(_dereq_,module,exports){
-var dissoc = _dereq_('./dissoc'),
-    objectKeys = _dereq_('./util').objectKeys,
-    isObject = _dereq_('./util').isObject,
-    copy = _dereq_('./util').copy;
-
-function dissocObj(obj, obj2) {
-  var keys = objectKeys(obj2),
-      n = keys.length,
-      i = -1,
-      o, o2, k;
-  if (!n) return obj;
-  o = copy(obj);
-  while(++i < n) {
-    k = keys[i];
-    o2 = obj2[k];
-    if (isObject(o2)) {
-      o[k] = dissocObj(obj[k], o2);
-      if (!objectKeys(o[k]).length) delete o[k];
-    } else {
-      delete o[k];
-    }
-  }
-  return o;
-}
-
-module.exports = dissocObj;
-},{"./dissoc":4,"./util":13}],7:[function(_dereq_,module,exports){
-var isUndefined = _dereq_('./util').isUndefined,
-    isNull = _dereq_('./util').isNull,
+},{"./hasIn":8,"./util":17}],6:[function(_dereq_,module,exports){
+var isNull = _dereq_('./util').isNull,
     isObject = _dereq_('./util').isObject;
 
 function get(obj, k, orValue) {
-  if (!isObject(obj) || isNull(obj) || !(k in obj)) return isUndefined(orValue) ? void 0 : orValue;
+  if (!isObject(obj) || isNull(obj) || !(k in obj)) return orValue;
   return obj[k];
 }
 
 module.exports = get;
-},{"./util":13}],8:[function(_dereq_,module,exports){
-var isUndefined = _dereq_('./util').isUndefined,
-    isNull = _dereq_('./util').isNull,
+},{"./util":17}],7:[function(_dereq_,module,exports){
+var isNull = _dereq_('./util').isNull,
     isObject = _dereq_('./util').isObject;
 
 // Get value from a nested structure or null.
 function getIn(obj, keys, orValue) {
   var k = keys[0],
       ks = keys.slice(1);
-  if (!isObject(obj) || isNull(obj) || !(k in obj)) return isUndefined(orValue) ? void 0 : orValue;
+  if (!isObject(obj) || isNull(obj) || !(k in obj)) return orValue;
   return ks.length ? getIn(obj[k], ks, orValue) : obj[k];
 }
 
 module.exports = getIn;
-},{"./util":13}],9:[function(_dereq_,module,exports){
-var get = _dereq_('./get'),
-    getIn = _dereq_('./getIn'),
-    assoc = _dereq_('./assoc'),
-    dissoc = _dereq_('./dissoc'),
-    assocIn = _dereq_('./assocIn'),
-    dissocIn = _dereq_('./dissocIn'),
-    assocObj = _dereq_('./assocObj'),
-    dissocObj = _dereq_('./dissocObj'),
-    update = _dereq_('./update'),
-    updateIn = _dereq_('./updateIn'),
+},{"./util":17}],8:[function(_dereq_,module,exports){
+// Check if a nested property is present. Currently only used internally
+
+function hasIn(obj, keys) {
+  var k = keys[0],
+      ks = keys.slice(1);
+  if (ks.length) return !(k in obj) ? false : hasIn(obj[k], ks);
+  return (k in obj);
+}
+
+module.exports = hasIn;
+},{}],9:[function(_dereq_,module,exports){
+var multiGet = _dereq_('./multiGet'),
+    multiAssoc = _dereq_('./multiAssoc'),
+    multiDissoc = _dereq_('./multiDissoc'),
+    multiUpdate = _dereq_('./multiUpdate'),
     merge = _dereq_('./merge'),
-    util = _dereq_('./util');
-
-function multiGet(obj, path, orValue) {
-  if (typeof path === 'string' || typeof path === 'number') return get(obj, path, orValue);
-  return getIn(obj, path, orValue);
-}
-
-function multiAssoc(obj, path, value) {
-  if (typeof path === 'string' || typeof path === 'number') return assoc(obj, path, value);
-  if (!util.isUndefined(value) && util.isArray(path)) return assocIn(obj, path, value);
-  return assocObj(obj, path);
-}
-
-function multiDissoc(obj, path) {
-  if (typeof path === 'string' || typeof path === 'number') return dissoc(obj, path);
-  if (util.isArray(path)) return dissocIn(obj, path);
-  return dissocObj(obj, path);
-}
-
-function multiUpdate(obj, path, fn) {
-  if (typeof path === 'string' || typeof path === 'number') return update(obj, path, fn);
-  return updateIn(obj, path, fn);
-}
+    deepMerge = _dereq_('./deepMerge');
 
 module.exports = {
   get: multiGet,
   assoc: multiAssoc,
   dissoc: multiDissoc,
   update: multiUpdate,
-  merge: merge
+  merge: merge,
+  deepMerge: deepMerge
 };
-},{"./assoc":1,"./assocIn":2,"./assocObj":3,"./dissoc":4,"./dissocIn":5,"./dissocObj":6,"./get":7,"./getIn":8,"./merge":10,"./update":11,"./updateIn":12,"./util":13}],10:[function(_dereq_,module,exports){
+},{"./deepMerge":3,"./merge":10,"./multiAssoc":11,"./multiDissoc":12,"./multiGet":13,"./multiUpdate":14}],10:[function(_dereq_,module,exports){
 function merge() {
   var n = arguments.length,
       i = -1,
@@ -198,6 +168,69 @@ function merge() {
 
 module.exports = merge;
 },{}],11:[function(_dereq_,module,exports){
+var util = _dereq_('./util'),
+    assoc = _dereq_('./assoc'),
+    assocIn = _dereq_('./assocIn');
+
+function multiAssoc(obj) {
+  var n = arguments.length,
+      i = -1,
+      o = obj,
+      path, value;
+
+  while ((i += 2) < n) {
+    path = arguments[i];
+    value = arguments[i + 1];
+    o = util.isArray(path) ? assocIn(o, path, value) : assoc(o, path, value);
+  }
+
+  return o;
+}
+
+module.exports = multiAssoc;
+},{"./assoc":1,"./assocIn":2,"./util":17}],12:[function(_dereq_,module,exports){
+var util = _dereq_('./util'),
+    dissoc = _dereq_('./dissoc'),
+    dissocIn = _dereq_('./dissocIn');
+
+function multiDissoc(obj) {
+  var n = arguments.length,
+      i = 0,
+      o = obj,
+      path;
+
+  while (++i < n) {
+    path = arguments[i];
+    o = util.isArray(path) ? dissocIn(o, path) : dissoc(o, path);
+  }
+
+  return o;
+}
+
+module.exports = multiDissoc;
+},{"./dissoc":4,"./dissocIn":5,"./util":17}],13:[function(_dereq_,module,exports){
+var util = _dereq_('./util'),
+    get = _dereq_('./get'),
+    getIn = _dereq_('./getIn');
+
+function multiGet(obj, path, orValue) {
+  if (util.isArray(path)) return getIn(obj, path, orValue);
+  return get(obj, path, orValue);
+}
+
+module.exports = multiGet;
+},{"./get":6,"./getIn":7,"./util":17}],14:[function(_dereq_,module,exports){
+var util = _dereq_('./util'),
+    update = _dereq_('./update'),
+    updateIn = _dereq_('./updateIn');
+
+function multiUpdate(obj, path, fn) {
+  if (util.isArray(path)) return updateIn.apply(this, arguments);
+  return update.apply(this, arguments);
+}
+
+module.exports = multiUpdate;
+},{"./update":15,"./updateIn":16,"./util":17}],15:[function(_dereq_,module,exports){
 var get = _dereq_('./get'),
     assoc = _dereq_('./assoc');
 
@@ -208,8 +241,8 @@ function update(obj, k, fn) {
 }
 
 module.exports = update;
-},{"./assoc":1,"./get":7}],12:[function(_dereq_,module,exports){
-var getIn = _dereq_('./getIn')
+},{"./assoc":1,"./get":6}],16:[function(_dereq_,module,exports){
+var getIn = _dereq_('./getIn'),
     assocIn = _dereq_('./assocIn');
 
 function updateIn(obj, keys, fn) {
@@ -219,7 +252,7 @@ function updateIn(obj, keys, fn) {
 }
 
 module.exports = updateIn;
-},{"./assocIn":2,"./getIn":8}],13:[function(_dereq_,module,exports){
+},{"./assocIn":2,"./getIn":7}],17:[function(_dereq_,module,exports){
 var _toString = {}.toString;
 
 var isArray = Array.isArray || function(arr) { return _toString.call(arr) === '[object Array]'; };
