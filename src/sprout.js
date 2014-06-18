@@ -5,7 +5,6 @@ var get = require('./get'),
     assocIn = require('./assocIn'),
     dissocIn = require('./dissocIn'),
     deepMerge = require('./deepMerge'),
-    dissocObj = require('./dissocObj'),
     update = require('./update'),
     updateIn = require('./updateIn'),
     merge = require('./merge'),
@@ -22,9 +21,8 @@ function multiAssoc(obj, path, value) {
 }
 
 function multiDissoc(obj, path) {
-  if (typeof path === 'string' || typeof path === 'number') return dissoc(obj, path);
   if (util.isArray(path)) return dissocIn(obj, path);
-  return dissocObj(obj, path);
+  return dissoc(obj, path);
 }
 
 function multiUpdate(obj, path, fn) {

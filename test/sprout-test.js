@@ -8,7 +8,6 @@ var vows = require('vows'),
     assocIn = require('../src/assocIn'),
     dissocIn = require('../src/dissocIn'),
     deepMerge = require('../src/deepMerge'),
-    dissocObj = require('../src/dissocObj'),
     update = require('../src/update'),
     updateIn = require('../src/updateIn'),
     merge = require('../src/merge');
@@ -81,11 +80,6 @@ vows.describe('sprout').addBatch({
     'a nested property': function(obj) {
       var o1 = sprout.dissoc(obj, ['baz', 'blah']);
       var o2 = dissocIn(obj, ['baz', 'blah']);
-      assert.deepEqual(o1, o2);
-    },
-    'multiple properties': function(obj) {
-      var o1 = sprout.dissoc(obj, {foo: true, baz: {blah: true}});
-      var o2 = dissocObj(obj, {foo: true, baz: {blah: true}});
       assert.deepEqual(o1, o2);
     },
     'an array property': function() {
