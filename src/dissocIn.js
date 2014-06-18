@@ -1,8 +1,8 @@
 var util = require('./util'),
-    getIn = require('./getIn');
+    hasIn = require('./hasIn');
 
 function dissocIn(obj, keys) {
-  if (!util.hasIn(obj, keys)) return obj;
+  if (!hasIn(obj, keys)) return obj;
   var k = keys[0],
       ks = keys.slice(1),
       o = util.copy(obj);

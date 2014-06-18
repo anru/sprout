@@ -33,19 +33,11 @@ function objectKeys(obj) {
   return keys;
 }
 
-function hasIn(obj, keys) {
-  var k = keys[0],
-      ks = keys.slice(1);
-  if (ks.length) return !(k in obj) ? false : hasIn(obj[k], ks);
-  return (k in obj);
-}
-
 module.exports = {
   copy: copy,
   objectKeys: objectKeys,
   isObject: isObject,
   isArray: isArray,
   isUndefined: isUndefined,
-  isNull: isNull,
-  hasIn: hasIn
+  isNull: isNull
 };
