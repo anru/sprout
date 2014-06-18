@@ -49,6 +49,8 @@ or
 bower install sprout-data --save
 ```
 
+or just download and include `sprout.js` or `sprout.min.js` in your page.
+
 ## API
 
 The *path* argument can be a single key or an array of keys to access nested properties.
