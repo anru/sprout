@@ -53,5 +53,12 @@ vows.describe('deepMerge()').addBatch({
       assert.notStrictEqual(newObj, obj);
       assert.deepEqual(newObj, {a: 1, b: {c: null}});
     },
+    'multiple nested properties via multiple arguments': function(obj) {
+      var newObj = deepMerge(obj, {a: 2}, {b: {c: 3}});
+      assert.notStrictEqual(newObj, obj);
+      assert.deepEqual(newObj, {a: 2, b: {c: 3}});
+      assert.deepEqual(obj, {a: 1, b: {c: 2}});
+      assert.notStrictEqual(newObj.b, obj.b);
+    },
   }
 }).export(module);

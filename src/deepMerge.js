@@ -24,4 +24,18 @@ function deepMerge(obj, obj2) {
   return o;
 }
 
-module.exports = deepMerge;
+function variadicDeepMerge() {
+  var n = arguments.length,
+      i = 0,
+      o = arguments[0],
+      obj;
+
+  while (++i < n) {
+    obj = arguments[i];
+    o = deepMerge(o, obj);
+  }
+
+  return o;
+}
+
+module.exports = variadicDeepMerge;
