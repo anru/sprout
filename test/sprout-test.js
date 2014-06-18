@@ -64,32 +64,6 @@ vows.describe('sprout').addBatch({
     }
   }
 }).addBatch({
-  'Dissociating': {
-    topic: function() {
-      return {
-        foo: 1,
-        bar: 'baz',
-        baz: {blah: 2}
-      };
-    },
-    'a property': function(obj) {
-      var o1 = sprout.dissoc(obj, 'foo');
-      var o2 = dissoc(obj, 'foo');
-      assert.deepEqual(o1, o2);
-    },
-    'a nested property': function(obj) {
-      var o1 = sprout.dissoc(obj, ['baz', 'blah']);
-      var o2 = dissocIn(obj, ['baz', 'blah']);
-      assert.deepEqual(o1, o2);
-    },
-    'an array property': function() {
-      var arr = [1, 2, 3]
-      var o1 = sprout.dissoc(arr, 2);
-      var o2 = dissoc(arr, 2);
-      assert.deepEqual(o1, o2);
-    }
-  }
-}).addBatch({
   'Updating': {
     topic: function() {
       return {

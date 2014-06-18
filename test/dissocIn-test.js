@@ -28,5 +28,10 @@ vows.describe('dissocIn()').addBatch({
       assert.deepEqual(obj, {a: 1, b: {c: 2, d: 3}, e: {f: 3}});
       assert.strictEqual(newObj.b, obj.b);
     },
+    'a non-existing property returns the original object': function(obj) {
+      var newObj = dissocIn(obj, ['x', 'y']);
+      assert.deepEqual(newObj, obj);
+      assert.strictEqual(newObj, obj);
+    },
   }
 }).export(module);
