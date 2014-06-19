@@ -1,36 +1,123 @@
 # Sprout
 
-Sprout is a collection of functions to make your life easier when dealing with nested data in JavaScript. Sprout never mutates the original data but returns new versions. This way, plain JavaScript objects (and arrays) can be effectively treated as if they were immutable.
+Sprout provides a set of functions to help you work with nested data without all the headaches. Sprout never mutates the original data but returns new versions. This way, plain JavaScript objects (and arrays) can be effectively treated as if they were immutable.
 
-For example you could modify application state using Sprout and store each version in an array to get instant undo/redo functionality. Or you could only re-render changed subtrees of the application state by comparing with strict equality between versions.
+One useful application of this would be to modify application state using Sprout and store each version in an array to get instant undo/redo functionality. Or you could only re-render changed subtrees of the application state by comparing with strict equality between versions.
 
-## How Sprout works
+## Working with nested data
 
-For efficiency, Sprout uses *structural sharing*. This means it does not naively deep-copy data but re-uses unmodified parts. This is more performant and memory-efficient than deep copying. It also lets you compare parts with strict equality to detect what has changed. Consider the following scenario:
+### Retrieving nested values
+
+Sprout's `get()` function allows you to gracefully retrieve nested values without blowing up when a key isn't present.
 
 ```js
-var assoc = require('sprout-data').assoc;
+var data = {a: {b: {c: 'foo'}}};
+```
 
-var data = {
+Normally, you'd retrieve the value of `c` like this:
+
+```js
+data.a.b.c; // => 'foo'
+```
+
+But what if the data isn't structured like you expected? Let's say
+
+```js
+data = {a: {b: {}}};
+
+data.a.b.c; // => undefined
+```
+
+That still looks good, right? But what if your data looks like
+
+```js
+data = {};
+
+data.a.b.c; // => Uh-oh! "TypeError: Cannot read property 'b' of undefined"
+```
+
+You *could* prevent this by checking for the existence of nested objects first:
+
+```js
+data.a && data.a.b ? data.a.b.c : void 0;
+```
+
+But who wants to write code like that?
+
+Sprout to the rescue!
+
+```js
+sprout.get(data, ['a', 'b', 'c']) // => undefined
+```
+
+Additionally, you can supply a default return value as the third parameter to `sprout.get()`. This is useful for example when you expect an array and want to call its methods later.
+
+```js
+var z = sprout.get(data, ['x', 'y', 'z'], []);
+z.filter(...);
+```
+
+### Modifying nested values
+
+When you want to modify your data, you'll usually do it this way:
+
+```js
+data = {a: {b: {c: 'foo'}}};
+
+data.a.b.c = 'bar';
+```
+
+This works fine in this particular case but has the same problem when your data isn't shaped like you expect.
+
+```js
+data = {};
+
+data.a.b.c = 'bar'; // => Again: "TypeError: Cannot read property 'b' of undefined"
+```
+
+Whereas with Sprout you can do this without worrying about the existence of nested objects:
+
+```js
+sprout.assoc(data, ['a', 'b', 'c'], 'bar') // => {a: {b: {c: 'bar'}}}
+```
+
+Also, the naive approach of `data.a.b.c = x` *mutates* your original data. Although it is the most performant way of modifying data, it's bad for several reasons:
+
+- The data may get used in other places. Modifying it in-place can lead to unexpected results and makes it harder to reason about
+- You have no easy way of telling when it was changed
+- There's no easy way to roll back to an earlier version of your data
+
+Luckily, Sprout also has a solution for this problem.
+
+## Immutability
+
+Sprout never mutates your data. Whenever a change is applied, a new version is returned.
+
+The easy approach to achieve this would be to create a deep copy of your data and then modify the copy. But especially for larger data structures, this is performance- and memory-intensive since you'll always copy everything instead of just the necessary parts.
+
+For efficiency, Sprout uses *structural sharing*. This means it re-uses unmodified parts of your data. This is more performant and memory-efficient than deep-copying. It also lets you compare individual parts with strict equality to detect what has changed. Consider the following scenario:
+
+```js
+var data, updatedData;
+
+data = {
   a: {b: {c: 1}},
   x: {y: {z: 1}}
 };
 
-var updatedData = assoc(data, ['a', 'b', 'c'], 2);
+updatedData = sprout.assoc(data, ['a', 'b', 'c'], 2);
 ```
 
-* `updatedData.a.b.c === 2`
-* `data` is not mutated, therefore `data.a.b.c === 1`
-* The objects `updatedData.x` and `updatedData.x.y` are re-used from `data`, therefore `updatedData.x === data.x` and `updatedData.x.y === data.x.y` (and of course `updatedData.x.y.z === data.x.y.z`)
+- `updatedData.a.b.c === 2`
+- `data` is not mutated, therefore `data.a.b.c === 1`
+- The objects `updatedData.x` and `updatedData.x.y` are re-used from `data`, therefore `updatedData.x === data.x` and `updatedData.x.y === data.x.y` (and of course `updatedData.x.y.z === data.x.y.z`)
 
-Additionally, most of Sprout's functions return the original data when they haven't changed anything.
+Additionally, when an operation doesn't actually change *anything* (i.e. when the new value is equal to the old one), Sprout doesn't create new objects at all and returns the original unmodified data instead (*this isn't true yet for `merge` and `deepMerge`*).
 
 ```js
-var assoc = require('sprout-data').assoc;
+data = {a: 1};
 
-var data = {a: 1};
-
-var updatedData = assoc(data, 'a', 1);
+updatedData = sprout.assoc(data, 'a', 1);
 ```
 
 In this case, `updatedData === data`.
