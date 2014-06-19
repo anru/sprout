@@ -1,12 +1,10 @@
-var isNull = require('./util').isNull,
-    isObject = require('./util').isObject;
+var get = require('./get');
 
 // Get value from a nested structure or null.
 function getIn(obj, keys, orValue) {
   var k = keys[0],
       ks = keys.slice(1);
-  if (!isObject(obj) || isNull(obj) || !(k in obj)) return orValue;
-  return ks.length ? getIn(obj[k], ks, orValue) : obj[k];
+  return ks.length ? getIn(obj[k], ks, orValue) : get(obj, k, orValue);
 }
 
 module.exports = getIn;
