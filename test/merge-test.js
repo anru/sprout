@@ -25,14 +25,10 @@ vows.describe('merge()').addBatch({
       assert.notStrictEqual(newObj, obj);
       assert.deepEqual(newObj, {foo: 2, bar: 'baz', baz: 2});
     },
-    'with one argument returns a shallow copy': function(obj) {
-      var newObj = merge(obj);
-      assert.notStrictEqual(newObj, obj);
+    'when no values are changed, returns the original object': function(obj) {
+      var newObj = merge(obj, {foo: 1, bar: 'baz'});
       assert.deepEqual(newObj, obj);
-    },
-    'without any arguments returns an empty object': function(obj) {
-      var newObj = merge();
-      assert.deepEqual(newObj, {});
+      assert.strictEqual(newObj, obj);
     },
   }
 }).export(module);
