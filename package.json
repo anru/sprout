@@ -1,6 +1,6 @@
 {
   "name": "sprout-data",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Create updated copies of nested data by reusing unchanged parts and without mutating the original.",
   "main": "src/index.js",
   "repository": "https://github.com/herrstucki/sprout.git",
