@@ -112,7 +112,7 @@ updatedData = sprout.assoc(data, ['a', 'b', 'c'], 2);
 - `data` is not mutated, therefore `data.a.b.c === 1`
 - The objects `updatedData.x` and `updatedData.x.y` are re-used from `data`, therefore `updatedData.x === data.x` and `updatedData.x.y === data.x.y` (and of course `updatedData.x.y.z === data.x.y.z`)
 
-Additionally, when an operation doesn't actually change *anything* (i.e. when the new value is equal to the old one), Sprout doesn't create new objects at all and returns the original unmodified data instead (*this isn't true yet for `merge` and `deepMerge`*).
+Additionally, when an operation doesn't actually change *anything* (i.e. when the new value is equal to the old one), Sprout doesn't create new objects at all and returns the original unmodified data instead.
 
 ```js
 data = {a: 1};
