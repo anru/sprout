@@ -12,12 +12,12 @@
   ],
   "scripts": {
     "test": "vows --spec",
-    "build": "browserify -s sprout -o sprout.js -- index.js && uglifyjs -o sprout.min.js -- sprout.js"
+    "build": "browserify -s sprout -o sprout.js -- index.js && uglifyjs -c -m -o sprout.min.js -- sprout.js"
   },
   "author": "Jeremy Stucki",
   "license": "BSD",
   "devDependencies": {
-    "browserify": "^3.43.0",
+    "browserify": "^4.1.11",
     "uglify-js": "^2.4.13",
     "vows": "~0.7.0"
   }
