@@ -1,26 +1,24 @@
-var copy = require('./util').copy,
-    objectKeys = require('./util').objectKeys,
-    isObject = require('./util').isObject,
-    isArray = require('./util').isArray,
-    isNull = require('./util').isNull,
-    getIn = require('./getIn');
+var util = require('./util'),
+    assoc = require('./assoc');
 
 function deepMerge(obj, obj2) {
-  var keys = objectKeys(obj2),
+  var keys = util.objectKeys(obj2),
       n = keys.length,
       i = -1,
-      o, o2, k;
-  if (!n) return obj;
-  o = copy(obj);
+      o = obj,
+      value, k;
+
   while (++i < n) {
     k = keys[i];
-    o2 = obj2[k];
-    if (isObject(o2) && !isNull(o2)) {
-      o[k] = (k in o) ? deepMerge(o[k], o2) : deepMerge(isArray(o2) ? [] : {}, o2); // Just assigning o2 to o[k] when k is not in o would be faster but less safe because we'd keep a reference to o2
+    value = obj2[k];
+
+    if (util.isObject(value) && !util.isNull(value)) {
+      o = assoc(o, k, (k in o) ? deepMerge(o[k], value) : util.copy(value)); // Just assigning value to o[k] when k is not in o would be faster but less safe because we'd keep a reference to value
     } else {
-      o[k] = o2;
+      o = assoc(o, k, value);
     }
   }
+  
   return o;
 }
 

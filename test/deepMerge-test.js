@@ -60,5 +60,14 @@ vows.describe('deepMerge()').addBatch({
       assert.deepEqual(obj, {a: 1, b: {c: 2}});
       assert.notStrictEqual(newObj.b, obj.b);
     },
+    'when no values changed, returns the original object': function(obj) {
+      var newObj = deepMerge(obj, {b: {c: 2}});
+      assert.deepEqual(newObj, obj);
+      assert.strictEqual(newObj, obj);
+    },
+    'into a non-object': function(obj) {
+      var newObj = deepMerge(obj, {a: {c: 2}});
+      assert.deepEqual(newObj, {a: {c: 2}, b: {c: 2}});
+    },
   }
 }).export(module);
