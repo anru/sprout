@@ -95,6 +95,8 @@ Sprout never mutates your data. Whenever a change is applied, a new version is r
 
 The easy approach to achieve this would be to create a deep copy of your data and then modify the copy. But especially for larger data structures, this is performance- and memory-intensive since you'll always copy everything instead of just the necessary parts.
 
+### Structural sharing
+
 For efficiency, Sprout uses *structural sharing*. This means it re-uses unmodified parts of your data. This is more performant and memory-efficient than deep-copying. It also lets you compare individual parts with strict equality to detect what has changed. Consider the following scenario:
 
 ```js
@@ -112,7 +114,9 @@ updatedData = sprout.assoc(data, ['a', 'b', 'c'], 2);
 - `data` is not mutated, therefore `data.a.b.c === 1`
 - The objects `updatedData.x` and `updatedData.x.y` are re-used from `data`, therefore `updatedData.x === data.x` and `updatedData.x.y === data.x.y` (and of course `updatedData.x.y.z === data.x.y.z`)
 
-Additionally, when an operation doesn't actually change *anything* (i.e. when the new value is equal to the old one), Sprout doesn't create new objects at all and returns the original unmodified data instead.
+### No unnecessary changes
+
+When an operation doesn't actually change a value (i.e. when the new value is strictly equal to the old one), Sprout doesn't create new objects at all and returns the original unmodified data instead.
 
 ```js
 data = {a: 1};
