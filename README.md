@@ -263,6 +263,25 @@ deepMerge(obj, {x: {y: 42}}); // => {a: 1, b: {c: 2, d: 3}, x: {y: 42}}
 
 See tests for more details.
 
+## Performance
+
+For what it's worth, I benchmarked Sprout against [mori](http://swannodette.github.io/mori/), [React.addons.update](http://facebook.github.io/react/docs/update.html) and two deep clone algorithms.
+
+These are the results for node v0.10.28:
+
+```
+mori native x 1,826,214 ops/sec ±0.86% (94 runs sampled)
+sprout.assoc x 462,403 ops/sec ±1.66% (92 runs sampled)
+mori to js x 47,602 ops/sec ±1.76% (96 runs sampled)
+Clone x 190,401 ops/sec ±1.87% (95 runs sampled)
+React.addons.update x 122,288 ops/sec ±0.73% (98 runs sampled)
+Lodash clone x 104,976 ops/sec ±0.71% (93 runs sampled)
+mori total conversion x 18,982 ops/sec ±1.89% (91 runs sampled)
+```
+
+What's noteworthy is that mori is by far the fastest, as long as no conversion happens between mori and JavaScript data structures. So if you're using mori all the way in your app, it's probably the best solution, as you also get real immutable data structures.
+
+
 ## Inspiration
 
 * The API is heavily inspired by Clojure's [Map functions](http://clojuredocs.org/quickref/Clojure%20Core#Collections+-+SequencesMaps).
