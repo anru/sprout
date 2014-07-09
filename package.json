@@ -12,7 +12,8 @@
   ],
   "scripts": {
     "test": "vows --spec",
-    "benchmark": "NODE_ENV=production node benchmark/assoc-benchmark.js",
+    "bench-vs": "NODE_ENV=production node benchmark/vs-benchmark.js",
+    "bench-dev": "node benchmark/dev-benchmark.js",
     "build": "browserify -s sprout -o sprout.js -- index.js && uglifyjs -c -m -o sprout.min.js -- sprout.js"
   },
   "author": "Jeremy Stucki",
