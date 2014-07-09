@@ -3,6 +3,7 @@ var Benchmark = require('benchmark');
 var mori = require('mori');
 var React = require('react/addons');
 var clone = require('clone');
+var _ = require('lodash');
 var sprout = require('../index');
 
 var suite = new Benchmark.Suite;
@@ -39,6 +40,11 @@ suite
   })
   .add('Clone', function() {
     var copy = clone(data);
+    copy.a.b.c = value;
+    return copy;
+  })
+  .add('Lodash clone', function() {
+    var copy = _.cloneDeep(data);
     copy.a.b.c = value;
     return copy;
   })
