@@ -12,12 +12,17 @@
   ],
   "scripts": {
     "test": "vows --spec",
+    "benchmark": "NODE_ENV=production node benchmark/assoc-benchmark.js",
     "build": "browserify -s sprout -o sprout.js -- index.js && uglifyjs -c -m -o sprout.min.js -- sprout.js"
   },
   "author": "Jeremy Stucki",
   "license": "BSD",
   "devDependencies": {
+    "benchmark": "^1.0.0",
     "browserify": "^4.1.11",
+    "envify": "^1.2.1",
+    "mori": "^0.2.6",
+    "react": "^0.10.0",
     "uglify-js": "^2.4.13",
     "vows": "~0.7.0"
   }
