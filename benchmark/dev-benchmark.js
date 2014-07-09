@@ -2,6 +2,8 @@ var Benchmark = require('benchmark');
 var sproutBuild = require('../sprout');
 var sprout = require('../index');
 
+// A playground to test if new implementations have an impact on performance.
+
 var suite = new Benchmark.Suite;
 
 var data = {a: {b: {c: 'foo'}}, d: {e: {f: 'bar'}}, x: {y: [{z: 'baz'}]}};
@@ -9,6 +11,7 @@ var data = {a: {b: {c: 'foo'}}, d: {e: {f: 'bar'}}, x: {y: [{z: 'baz'}]}};
 function testWith(lib) {
   return function() {
     lib.assoc(data, ['a', 'b', 'c'], 'blah');
+    lib.get(data, ['x', 'y', 0, 'z']);
   }
 }
 

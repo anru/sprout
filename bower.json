@@ -12,7 +12,8 @@
   ],
   "ignore": [
     "src",
-    "test"
+    "test",
+    "benchmark"
   ],
   "author": "Jeremy Stucki",
   "license": "BSD"
