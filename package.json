@@ -21,6 +21,7 @@
   "devDependencies": {
     "benchmark": "^1.0.0",
     "browserify": "^4.1.11",
+    "clone": "^0.1.17",
     "envify": "^1.2.1",
     "mori": "^0.2.6",
     "react": "^0.10.0",

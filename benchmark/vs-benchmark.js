@@ -2,6 +2,7 @@ var assert = require('assert');
 var Benchmark = require('benchmark');
 var mori = require('mori');
 var React = require('react/addons');
+var clone = require('clone');
 var sprout = require('../index');
 
 var suite = new Benchmark.Suite;
@@ -35,6 +36,11 @@ suite
   })
   .add('React.addons.update', function() {
     return React.addons.update(data, update);
+  })
+  .add('Clone', function() {
+    var copy = clone(data);
+    copy.a.b.c = value;
+    return copy;
   })
   .on('cycle', function(event) {
     console.log(String(event.target));
