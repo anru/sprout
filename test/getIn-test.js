@@ -18,7 +18,7 @@ vows.describe('getIn()').addBatch({
       assert.isUndefined(getIn(obj, ['bar', 'foo']));
     },
     'a deeply nested non-existing property returns undefined by default': function(obj) {
-      assert.isUndefined(get(obj, ['bar', 'baz', 'qux']));
+      assert.isUndefined(getIn(obj, ['bar', 'baz', 'qux']));
     },
     'a property on a null or undefined object returns undefined by default': function(obj) {
       assert.isUndefined(getIn(null, ['bar']));
