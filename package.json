@@ -1,6 +1,6 @@
 {
   "name": "sprout-data",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A set of functions to work with nested data.",
   "main": "index.js",
   "repository": "https://github.com/herrstucki/sprout.git",
