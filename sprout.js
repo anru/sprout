@@ -122,10 +122,11 @@ var get = _dereq_('./get');
 function getIn(obj, keys, orValue) {
   var k = keys[0],
       ks = keys.slice(1);
-  return ks.length ? getIn(obj[k], ks, orValue) : get(obj, k, orValue);
+  return get(obj, k) && ks.length ? getIn(obj[k], ks, orValue) : get(obj, k, orValue);
 }
 
 module.exports = getIn;
+
 },{"./get":7}],9:[function(_dereq_,module,exports){
 // Check if a nested property is present. Currently only used internally
 
