@@ -1,3 +1,5 @@
+> **CALL FOR MAINTAINERS:** Since I'm not using this library myself anymore, I don't have time to spend working on it. If you're interested to develop it further, please let me know, and I'll happily transfer the project to you!
+
 # Sprout
 
 Sprout provides a set of functions to help you work with nested data without all the headaches. Sprout never mutates the original data but returns new versions. This way, plain JavaScript objects (and arrays) can be effectively treated as if they were immutable.
