@@ -1,6 +1,4 @@
-var _toString = {}.toString;
-
-var isArray = Array.isArray || function(arr) { return _toString.call(arr) === '[object Array]'; };
+var isArray = Array.isArray;
 
 function isObject(obj) {
   return typeof obj === 'object';
@@ -17,17 +15,16 @@ function isNull(v) {
 // Shallow copy
 function copy(obj) {
   if (isArray(obj)) return obj.slice();
-  var k,
-      newObj = {};
-  for (k in obj) {
+  var newObj = {};
+  for (var k in obj) {
     newObj[k] = obj[k];
   }
   return newObj;
 }
 
 function objectKeys(obj) {
-  var keys = [], k;
-  for (k in obj) {
+  var keys = [];
+  for (var k in obj) {
     keys.push(k);
   }
   return keys;

@@ -1,14 +1,14 @@
-!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.sprout=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.sprout = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 module.exports = {
-  get: _dereq_('./src/multiGet'),
-  assoc: _dereq_('./src/multiAssoc'),
-  dissoc: _dereq_('./src/multiDissoc'),
-  update: _dereq_('./src/multiUpdate'),
-  merge: _dereq_('./src/merge'),
-  deepMerge: _dereq_('./src/deepMerge')
+  get: require('./src/multiGet'),
+  assoc: require('./src/multiAssoc'),
+  dissoc: require('./src/multiDissoc'),
+  update: require('./src/multiUpdate'),
+  merge: require('./src/merge'),
+  deepMerge: require('./src/deepMerge')
 };
-},{"./src/deepMerge":4,"./src/merge":10,"./src/multiAssoc":11,"./src/multiDissoc":12,"./src/multiGet":13,"./src/multiUpdate":14}],2:[function(_dereq_,module,exports){
-var util = _dereq_('./util');
+},{"./src/deepMerge":4,"./src/merge":10,"./src/multiAssoc":11,"./src/multiDissoc":12,"./src/multiGet":13,"./src/multiUpdate":14}],2:[function(require,module,exports){
+var util = require('./util');
 
 function assoc(obj, k, value) {
   if (obj[k] === value) return obj;
@@ -18,9 +18,9 @@ function assoc(obj, k, value) {
 }
 
 module.exports = assoc;
-},{"./util":17}],3:[function(_dereq_,module,exports){
-var util = _dereq_('./util'),
-    getIn = _dereq_('./getIn');
+},{"./util":17}],3:[function(require,module,exports){
+var util = require('./util'),
+    getIn = require('./getIn');
 
 function assocIn(obj, keys, value) {
   if (getIn(obj, keys) === value) return obj;
@@ -36,9 +36,9 @@ function assocIn(obj, keys, value) {
 }
 
 module.exports = assocIn;
-},{"./getIn":8,"./util":17}],4:[function(_dereq_,module,exports){
-var util = _dereq_('./util'),
-    assoc = _dereq_('./assoc');
+},{"./getIn":8,"./util":17}],4:[function(require,module,exports){
+var util = require('./util'),
+    assoc = require('./assoc');
 
 function deepMerge(obj, obj2) {
   var keys = util.objectKeys(obj2),
@@ -76,8 +76,8 @@ function variadicDeepMerge() {
 }
 
 module.exports = variadicDeepMerge;
-},{"./assoc":2,"./util":17}],5:[function(_dereq_,module,exports){
-var util = _dereq_('./util');
+},{"./assoc":2,"./util":17}],5:[function(require,module,exports){
+var util = require('./util');
 
 function dissoc(obj, k) {
   if(!(k in obj)) return obj;
@@ -87,9 +87,9 @@ function dissoc(obj, k) {
 }
 
 module.exports = dissoc;
-},{"./util":17}],6:[function(_dereq_,module,exports){
-var util = _dereq_('./util'),
-    hasIn = _dereq_('./hasIn');
+},{"./util":17}],6:[function(require,module,exports){
+var util = require('./util'),
+    hasIn = require('./hasIn');
 
 function dissocIn(obj, keys) {
   if (!hasIn(obj, keys)) return obj;
@@ -106,8 +106,8 @@ function dissocIn(obj, keys) {
 }
 
 module.exports = dissocIn;
-},{"./hasIn":9,"./util":17}],7:[function(_dereq_,module,exports){
-var util = _dereq_('./util');
+},{"./hasIn":9,"./util":17}],7:[function(require,module,exports){
+var util = require('./util');
 
 function get(obj, k, orValue) {
   if (!util.isObject(obj) || util.isNull(obj) || !(k in obj)) return orValue;
@@ -115,8 +115,8 @@ function get(obj, k, orValue) {
 }
 
 module.exports = get;
-},{"./util":17}],8:[function(_dereq_,module,exports){
-var get = _dereq_('./get');
+},{"./util":17}],8:[function(require,module,exports){
+var get = require('./get');
 
 // Get value from a nested structure or null.
 function getIn(obj, keys, orValue) {
@@ -127,7 +127,7 @@ function getIn(obj, keys, orValue) {
 
 module.exports = getIn;
 
-},{"./get":7}],9:[function(_dereq_,module,exports){
+},{"./get":7}],9:[function(require,module,exports){
 // Check if a nested property is present. Currently only used internally
 
 function hasIn(obj, keys) {
@@ -138,8 +138,8 @@ function hasIn(obj, keys) {
 }
 
 module.exports = hasIn;
-},{}],10:[function(_dereq_,module,exports){
-var assoc = _dereq_('./assoc');
+},{}],10:[function(require,module,exports){
+var assoc = require('./assoc');
 
 function merge() {
   var n = arguments.length,
@@ -158,10 +158,10 @@ function merge() {
 }
 
 module.exports = merge;
-},{"./assoc":2}],11:[function(_dereq_,module,exports){
-var util = _dereq_('./util'),
-    assoc = _dereq_('./assoc'),
-    assocIn = _dereq_('./assocIn');
+},{"./assoc":2}],11:[function(require,module,exports){
+var util = require('./util'),
+    assoc = require('./assoc'),
+    assocIn = require('./assocIn');
 
 function multiAssoc(obj) {
   var n = arguments.length,
@@ -179,10 +179,10 @@ function multiAssoc(obj) {
 }
 
 module.exports = multiAssoc;
-},{"./assoc":2,"./assocIn":3,"./util":17}],12:[function(_dereq_,module,exports){
-var util = _dereq_('./util'),
-    dissoc = _dereq_('./dissoc'),
-    dissocIn = _dereq_('./dissocIn');
+},{"./assoc":2,"./assocIn":3,"./util":17}],12:[function(require,module,exports){
+var util = require('./util'),
+    dissoc = require('./dissoc'),
+    dissocIn = require('./dissocIn');
 
 function multiDissoc(obj) {
   var n = arguments.length,
@@ -199,10 +199,10 @@ function multiDissoc(obj) {
 }
 
 module.exports = multiDissoc;
-},{"./dissoc":5,"./dissocIn":6,"./util":17}],13:[function(_dereq_,module,exports){
-var util = _dereq_('./util'),
-    get = _dereq_('./get'),
-    getIn = _dereq_('./getIn');
+},{"./dissoc":5,"./dissocIn":6,"./util":17}],13:[function(require,module,exports){
+var util = require('./util'),
+    get = require('./get'),
+    getIn = require('./getIn');
 
 function multiGet(obj, path, orValue) {
   if (util.isArray(path)) return getIn(obj, path, orValue);
@@ -210,10 +210,10 @@ function multiGet(obj, path, orValue) {
 }
 
 module.exports = multiGet;
-},{"./get":7,"./getIn":8,"./util":17}],14:[function(_dereq_,module,exports){
-var util = _dereq_('./util'),
-    update = _dereq_('./update'),
-    updateIn = _dereq_('./updateIn');
+},{"./get":7,"./getIn":8,"./util":17}],14:[function(require,module,exports){
+var util = require('./util'),
+    update = require('./update'),
+    updateIn = require('./updateIn');
 
 function multiUpdate(obj, path) {
   if (util.isArray(path)) return updateIn.apply(this, arguments);
@@ -221,9 +221,9 @@ function multiUpdate(obj, path) {
 }
 
 module.exports = multiUpdate;
-},{"./update":15,"./updateIn":16,"./util":17}],15:[function(_dereq_,module,exports){
-var get = _dereq_('./get'),
-    assoc = _dereq_('./assoc');
+},{"./update":15,"./updateIn":16,"./util":17}],15:[function(require,module,exports){
+var get = require('./get'),
+    assoc = require('./assoc');
 
 function update(obj, k, fn) {
   var args = Array.prototype.slice.call(arguments, 3),
@@ -232,9 +232,9 @@ function update(obj, k, fn) {
 }
 
 module.exports = update;
-},{"./assoc":2,"./get":7}],16:[function(_dereq_,module,exports){
-var getIn = _dereq_('./getIn'),
-    assocIn = _dereq_('./assocIn');
+},{"./assoc":2,"./get":7}],16:[function(require,module,exports){
+var getIn = require('./getIn'),
+    assocIn = require('./assocIn');
 
 function updateIn(obj, keys, fn) {
   var args = Array.prototype.slice.call(arguments, 3),
@@ -243,10 +243,8 @@ function updateIn(obj, keys, fn) {
 }
 
 module.exports = updateIn;
-},{"./assocIn":3,"./getIn":8}],17:[function(_dereq_,module,exports){
-var _toString = {}.toString;
-
-var isArray = Array.isArray || function(arr) { return _toString.call(arr) === '[object Array]'; };
+},{"./assocIn":3,"./getIn":8}],17:[function(require,module,exports){
+var isArray = Array.isArray;
 
 function isObject(obj) {
   return typeof obj === 'object';
@@ -263,17 +261,16 @@ function isNull(v) {
 // Shallow copy
 function copy(obj) {
   if (isArray(obj)) return obj.slice();
-  var k,
-      newObj = {};
-  for (k in obj) {
+  var newObj = {};
+  for (var k in obj) {
     newObj[k] = obj[k];
   }
   return newObj;
 }
 
 function objectKeys(obj) {
-  var keys = [], k;
-  for (k in obj) {
+  var keys = [];
+  for (var k in obj) {
     keys.push(k);
   }
   return keys;
@@ -287,6 +284,5 @@ module.exports = {
   isUndefined: isUndefined,
   isNull: isNull
 };
-},{}]},{},[1])
-(1)
+},{}]},{},[1])(1)
 });

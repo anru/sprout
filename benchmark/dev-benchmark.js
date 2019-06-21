@@ -1,12 +1,13 @@
-var Benchmark = require('benchmark');
-var sproutBuild = require('../sprout');
-var sprout = require('../index');
+const Benchmark = require('benchmark');
+const sproutBuild = require('../sprout');
+const sproutMin = require('../sprout.min')
+const sprout = require('../index');
 
 // A playground to test if new implementations have an impact on performance.
 
-var suite = new Benchmark.Suite;
+const suite = new Benchmark.Suite;
 
-var data = {a: {b: {c: 'foo'}}, d: {e: {f: 'bar'}}, x: {y: [{z: 'baz'}]}};
+const data = {a: {b: {c: 'foo'}}, d: {e: {f: 'bar'}}, x: {y: [{z: 'baz'}]}};
 
 function testWith(lib) {
   return function() {
@@ -18,10 +19,11 @@ function testWith(lib) {
 suite
   .add('build', testWith(sproutBuild))
   .add('dev', testWith(sprout))
+  .add('min', testWith(sproutMin))
   .on('cycle', function(event) {
     console.log(String(event.target));
   })
   .on('complete', function() {
-    console.log('Fastest is ' + this.filter('fastest').pluck('name'));
+    console.log('Fastest is ' + this.filter('fastest').map('name'));
   })
   .run({ 'async': true });
