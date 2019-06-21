@@ -1,9 +1,9 @@
 {
   "name": "sprout-data",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A set of functions to work with nested data.",
   "main": "index.js",
-  "repository": "https://github.com/herrstucki/sprout.git",
+  "repository": "https://github.com/anru/sprout.git",
   "keywords": [
     "immutable",
     "nested",
@@ -14,19 +14,19 @@
     "test": "vows --spec",
     "bench-vs": "NODE_ENV=production node benchmark/vs-benchmark.js",
     "bench-dev": "node benchmark/dev-benchmark.js",
-    "build": "browserify -s sprout -o sprout.js -- index.js && uglifyjs -c -m -o sprout.min.js -- sprout.js"
+    "build": "browserify -s sprout -o sprout.js -- index.js && terser -c -m -o sprout.min.js -- sprout.js"
   },
   "author": "Jeremy Stucki",
   "license": "BSD",
   "devDependencies": {
-    "benchmark": "^1.0.0",
-    "browserify": "^4.1.11",
-    "clone": "^0.1.17",
-    "envify": "^1.2.1",
-    "lodash": "^2.4.1",
-    "mori": "^0.2.6",
-    "react": "^0.10.0",
-    "uglify-js": "^2.4.13",
-    "vows": "~0.7.0"
+    "benchmark": "^2.1.4",
+    "browserify": "^16.2.3",
+    "clone": "^2.1.2",
+    "envify": "^4.1.0",
+    "immutability-helper": "^3.0.1",
+    "lodash": "^4.17.11",
+    "mori": "^0.3.2",
+    "terser": "^4.0.0",
+    "vows": "~0.8.2"
   }
 }

@@ -1,50 +1,50 @@
-var assert = require('assert');
-var Benchmark = require('benchmark');
-var mori = require('mori');
-var React = require('react/addons');
-var clone = require('clone');
-var _ = require('lodash');
-var sprout = require('../index');
+const assert = require('assert');
+const Benchmark = require('benchmark');
+const mori = require('mori');
+const immutabilityHelper = require('immutability-helper');
+const clone = require('clone');
+const _ = require('lodash');
+const sprout = require('../index');
 
-var suite = new Benchmark.Suite;
+const suite = new Benchmark.Suite;
 
-var data = {a: {b: {c: 'foo'}}, d: {e: {f: 'bar'}}};
-var data_mori = mori.js_to_clj(data);
+const data = {a: {b: {c: 'foo'}}, d: {e: {f: 'bar'}}};
+const data_mori = mori.toClj(data);
 
-var path = ['a', 'b', 'c'];
-var value = 'baz';
-var update = {a: {b: {c: {'$set': value}}}};
+const path = ['a', 'b', 'c'];
+const value = 'baz';
+const updateAction = {a: {b: {c: {'$set': value}}}};
 
 // Test that we're benchmarking the right thing
-var expected = {a: {b: {c: 'baz'}}, d: {e: {f: 'bar'}}};
+const expected = {a: {b: {c: 'baz'}}, d: {e: {f: 'bar'}}};
 assert.deepEqual(sprout.assoc(data, path, value), expected);
-assert.deepEqual(mori.clj_to_js(mori.assoc_in(mori.js_to_clj(data), path, value)), expected);
-assert.deepEqual(mori.clj_to_js(mori.assoc_in(data_mori, path, value)), expected);
-assert.deepEqual(React.addons.update(data, update), expected);
+assert.deepEqual(mori.toJs(mori.assocIn(mori.toClj(data), path, value)), expected);
+assert.deepEqual(mori.toJs(mori.assocIn(data_mori, path, value)), expected);
+assert.deepEqual(immutabilityHelper(data, updateAction), expected);
 
 suite
   .add('sprout.assoc', function() {
     return sprout.assoc(data, path, value);
   })
   .add('mori native', function() {
-    return mori.assoc_in(data_mori, path, value);
+    return mori.assocIn(data_mori, path, value);
   })
   .add('mori total conversion', function() {
-    return mori.clj_to_js(mori.assoc_in(mori.js_to_clj(data), path, value));
+    return mori.toJs(mori.assocIn(mori.toClj(data), path, value));
   })
   .add('mori to js', function() {
-    return mori.clj_to_js(mori.assoc_in(data_mori, path, value));
+    return mori.toJs(mori.assocIn(data_mori, path, value));
   })
-  .add('React.addons.update', function() {
-    return React.addons.update(data, update);
+  .add('immutability-helper', function() {
+    return immutabilityHelper(data, updateAction);
   })
-  .add('Clone', function() {
-    var copy = clone(data);
+  .add('clone', function() {
+    const copy = clone(data);
     copy.a.b.c = value;
     return copy;
   })
   .add('Lodash clone', function() {
-    var copy = _.cloneDeep(data);
+    const copy = _.cloneDeep(data);
     copy.a.b.c = value;
     return copy;
   })
@@ -52,6 +52,6 @@ suite
     console.log(String(event.target));
   })
   .on('complete', function() {
-    console.log('Fastest is ' + this.filter('fastest').pluck('name'));
+    console.log('Fastest is ' + this.filter('fastest').map('name'));
   })
   .run({ 'async': true });

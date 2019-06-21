@@ -1,5 +1,8 @@
 # Sprout
 
+![npm version](https://img.shields.io/npm/v/sprout-data.svg)
+![minzipped size](https://img.shields.io/bundlephobia/minzip/sprout-data.svg)
+
 Sprout provides a set of functions to help you work with nested data without all the headaches. Sprout never mutates the original data but returns new versions. This way, plain JavaScript objects (and arrays) can be effectively treated as if they were immutable.
 
 One useful application of this would be to modify application state using Sprout and store each version in an array to get instant undo/redo functionality. Or you could only re-render changed subtrees of the application state by comparing with strict equality between versions.
@@ -265,18 +268,18 @@ See tests for more details.
 
 ## Performance
 
-For what it's worth, I benchmarked Sprout against [mori](http://swannodette.github.io/mori/), [React.addons.update](http://facebook.github.io/react/docs/update.html) and two deep clone algorithms.
+For what it's worth, I benchmarked Sprout against [mori](http://swannodette.github.io/mori/), [immutability-helper](https://github.com/kolodny/immutability-helper) and two deep clone algorithms.
 
-These are the results for node v0.10.28:
+These are the results for node v10.15.3 on MacBook Pro 2016:
 
 ```
-mori native x 1,826,214 ops/sec ±0.86% (94 runs sampled)
-sprout.assoc x 462,403 ops/sec ±1.66% (92 runs sampled)
-Clone x 190,401 ops/sec ±1.87% (95 runs sampled)
-React.addons.update x 122,288 ops/sec ±0.73% (98 runs sampled)
-Lodash clone x 104,976 ops/sec ±0.71% (93 runs sampled)
-mori to js x 47,602 ops/sec ±1.76% (96 runs sampled)
-mori total conversion x 18,982 ops/sec ±1.89% (91 runs sampled)
+mori native x 3,262,639 ops/sec ±0.51% (89 runs sampled)
+sprout.assoc x 1,206,109 ops/sec ±1.12% (84 runs sampled)
+clone x 482,803 ops/sec ±0.46% (88 runs sampled)
+mori to js x 387,704 ops/sec ±0.85% (89 runs sampled)
+Lodash clone x 314,781 ops/sec ±0.70% (86 runs sampled)
+immutability-helper x 279,670 ops/sec ±0.89% (90 runs sampled)
+mori total conversion x 101,457 ops/sec ±0.74% (86 runs sampled)
 ```
 
 What's noteworthy is that mori is by far the fastest, as long as no conversion happens between mori and JavaScript data structures. So if you're using mori all the way in your app, it's probably the best solution, as you also get real immutable data structures.
