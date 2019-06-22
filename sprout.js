@@ -1,288 +1,210 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.sprout = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-module.exports = {
-  get: require('./src/multiGet'),
-  assoc: require('./src/multiAssoc'),
-  dissoc: require('./src/multiDissoc'),
-  update: require('./src/multiUpdate'),
-  merge: require('./src/merge'),
-  deepMerge: require('./src/deepMerge')
-};
-},{"./src/deepMerge":4,"./src/merge":10,"./src/multiAssoc":11,"./src/multiDissoc":12,"./src/multiGet":13,"./src/multiUpdate":14}],2:[function(require,module,exports){
-var util = require('./util');
+var sprout = (function (exports) {
+  'use strict';
 
-function assoc(obj, k, value) {
-  if (obj[k] === value) return obj;
-  var o = util.copy(obj);
-  o[k] = value;
-  return o;
-}
+  var slice = Array.prototype.slice;
 
-module.exports = assoc;
-},{"./util":17}],3:[function(require,module,exports){
-var util = require('./util'),
-    getIn = require('./getIn');
+  function isObject(obj) {
+    return typeof obj === 'object'
+  }
 
-function assocIn(obj, keys, value) {
-  if (getIn(obj, keys) === value) return obj;
-  var k = keys[0],
-      ks = keys.slice(1),
-      o = util.copy(obj);
-  if (ks.length) {
-    o[k] = (k in o) ? assocIn(o[k], ks, value) : assocIn({}, ks, value);
-  } else {
+  // Shallow copy
+  function copy(obj) {
+    if (Array.isArray(obj)) { return obj.slice() }
+    var newObj = {};
+    for (var k in obj) {
+      newObj[k] = obj[k];
+    }
+    return newObj
+  }
+
+  function get(obj, k, orValue) {
+    if (!isObject(obj) || obj === null || !(k in obj)) {
+      return orValue
+    }
+    return obj[k]
+  }
+
+  // Get value from a nested structure or null.
+  function getIn(obj, keys, orValue) {
+    var k = keys[0];
+    var ks = keys.slice(1);
+    return get(obj, k) && ks.length ? getIn(obj[k], ks, orValue) : get(obj, k, orValue)
+  }
+
+  function multiGet(obj, path, orValue) {
+    if (Array.isArray(path)) { return getIn(obj, path, orValue) }
+    return get(obj, path, orValue)
+  }
+
+  function assoc(obj, k, value) {
+    if (obj[k] === value) { return obj }
+    var o = copy(obj);
     o[k] = value;
+    return o
   }
-  return o;
-}
 
-module.exports = assocIn;
-},{"./getIn":8,"./util":17}],4:[function(require,module,exports){
-var util = require('./util'),
-    assoc = require('./assoc');
+  function assocIn(obj, keys, value) {
+    if (getIn(obj, keys) === value) {
+      return obj
+    }
+    var k = keys[0];
+    var ks = keys.slice(1);
+    var o = copy(obj);
 
-function deepMerge(obj, obj2) {
-  var keys = util.objectKeys(obj2),
-      n = keys.length,
-      i = -1,
-      o = obj,
-      value, k;
-
-  while (++i < n) {
-    k = keys[i];
-    value = obj2[k];
-
-    if (util.isObject(value) && !util.isNull(value)) {
-      o = assoc(o, k, (k in o) ? deepMerge(o[k], value) : util.copy(value)); // Just assigning value to o[k] when k is not in o would be faster but less safe because we'd keep a reference to value
+    if (ks.length) {
+      o[k] = (k in o) ? assocIn(o[k], ks, value) : assocIn({}, ks, value);
     } else {
-      o = assoc(o, k, value);
+      o[k] = value;
     }
-  }
-  
-  return o;
-}
 
-function variadicDeepMerge() {
-  var n = arguments.length,
-      i = 0,
-      o = arguments[0],
-      obj;
-
-  while (++i < n) {
-    obj = arguments[i];
-    o = deepMerge(o, obj);
+    return o
   }
 
-  return o;
-}
+  function multiAssoc(obj) {
+    var arguments$1 = arguments;
 
-module.exports = variadicDeepMerge;
-},{"./assoc":2,"./util":17}],5:[function(require,module,exports){
-var util = require('./util');
+    var argsLen = arguments.length;
+    var o = obj;
+    var path;
+    var value;
 
-function dissoc(obj, k) {
-  if(!(k in obj)) return obj;
-  var o = util.copy(obj);
-  delete o[k];
-  return o;
-}
+    for (var i = 1; i < argsLen; i += 2) {
+      path = arguments$1[i];
+      value = arguments$1[i + 1];
+      o = Array.isArray(path) ? assocIn(o, path, value) : assoc(o, path, value);
+    }
 
-module.exports = dissoc;
-},{"./util":17}],6:[function(require,module,exports){
-var util = require('./util'),
-    hasIn = require('./hasIn');
+    return o
+  }
 
-function dissocIn(obj, keys) {
-  if (!hasIn(obj, keys)) return obj;
-  var k = keys[0],
-      ks = keys.slice(1),
-      o = util.copy(obj);
-  if (ks.length) {
-    o[k] = dissocIn(obj[k], ks);
-    if (!util.objectKeys(o[k]).length) delete o[k];
-  } else {
+  function dissoc(obj, k) {
+    if (!(k in obj)) { return obj }
+    var o = copy(obj);
     delete o[k];
+    return o
   }
-  return o;
-}
 
-module.exports = dissocIn;
-},{"./hasIn":9,"./util":17}],7:[function(require,module,exports){
-var util = require('./util');
+  // Check if a nested property is present. Currently only used internally
 
-function get(obj, k, orValue) {
-  if (!util.isObject(obj) || util.isNull(obj) || !(k in obj)) return orValue;
-  return obj[k];
-}
-
-module.exports = get;
-},{"./util":17}],8:[function(require,module,exports){
-var get = require('./get');
-
-// Get value from a nested structure or null.
-function getIn(obj, keys, orValue) {
-  var k = keys[0],
-      ks = keys.slice(1);
-  return get(obj, k) && ks.length ? getIn(obj[k], ks, orValue) : get(obj, k, orValue);
-}
-
-module.exports = getIn;
-
-},{"./get":7}],9:[function(require,module,exports){
-// Check if a nested property is present. Currently only used internally
-
-function hasIn(obj, keys) {
-  var k = keys[0],
-      ks = keys.slice(1);
-  if (ks.length) return !(k in obj) ? false : hasIn(obj[k], ks);
-  return (k in obj);
-}
-
-module.exports = hasIn;
-},{}],10:[function(require,module,exports){
-var assoc = require('./assoc');
-
-function merge() {
-  var n = arguments.length,
-      i = 0,
-      o = arguments[0],
-      k, obj;
-
-  while (++i < n) {
-    obj = arguments[i];
-    for (k in obj) {
-      o = assoc(o, k, obj[k]);
+  function hasIn(obj, keys) {
+    var k = keys[0];
+    var ks = keys.slice(1);
+    if (ks.length) {
+      return !(k in obj) ? false : hasIn(obj[k], ks)
     }
+    return (k in obj)
   }
 
-  return o;
-}
+  function dissocIn(obj, keys) {
+    if (!hasIn(obj, keys)) { return obj }
 
-module.exports = merge;
-},{"./assoc":2}],11:[function(require,module,exports){
-var util = require('./util'),
-    assoc = require('./assoc'),
-    assocIn = require('./assocIn');
-
-function multiAssoc(obj) {
-  var n = arguments.length,
-      i = -1,
-      o = obj,
-      path, value;
-
-  while ((i += 2) < n) {
-    path = arguments[i];
-    value = arguments[i + 1];
-    o = util.isArray(path) ? assocIn(o, path, value) : assoc(o, path, value);
+    var k = keys[0];
+    var ks = keys.slice(1);
+    var o = copy(obj);
+    if (ks.length !== 0) {
+      o[k] = dissocIn(obj[k], ks);
+      if (Object.keys(o[k]).length === 0) {
+        delete o[k];
+      }
+    } else {
+      delete o[k];
+    }
+    return o
   }
 
-  return o;
-}
+  function multiDissoc(obj) {
+    var arguments$1 = arguments;
 
-module.exports = multiAssoc;
-},{"./assoc":2,"./assocIn":3,"./util":17}],12:[function(require,module,exports){
-var util = require('./util'),
-    dissoc = require('./dissoc'),
-    dissocIn = require('./dissocIn');
+    var argsLen = arguments.length;
+    var i = 0;
+    var o = obj;
+    var path;
 
-function multiDissoc(obj) {
-  var n = arguments.length,
-      i = 0,
-      o = obj,
-      path;
+    while (++i < argsLen) {
+      path = arguments$1[i];
+      o = Array.isArray(path) ? dissocIn(o, path) : dissoc(o, path);
+    }
 
-  while (++i < n) {
-    path = arguments[i];
-    o = util.isArray(path) ? dissocIn(o, path) : dissoc(o, path);
+    return o
   }
 
-  return o;
-}
-
-module.exports = multiDissoc;
-},{"./dissoc":5,"./dissocIn":6,"./util":17}],13:[function(require,module,exports){
-var util = require('./util'),
-    get = require('./get'),
-    getIn = require('./getIn');
-
-function multiGet(obj, path, orValue) {
-  if (util.isArray(path)) return getIn(obj, path, orValue);
-  return get(obj, path, orValue);
-}
-
-module.exports = multiGet;
-},{"./get":7,"./getIn":8,"./util":17}],14:[function(require,module,exports){
-var util = require('./util'),
-    update = require('./update'),
-    updateIn = require('./updateIn');
-
-function multiUpdate(obj, path) {
-  if (util.isArray(path)) return updateIn.apply(this, arguments);
-  return update.apply(this, arguments);
-}
-
-module.exports = multiUpdate;
-},{"./update":15,"./updateIn":16,"./util":17}],15:[function(require,module,exports){
-var get = require('./get'),
-    assoc = require('./assoc');
-
-function update(obj, k, fn) {
-  var args = Array.prototype.slice.call(arguments, 3),
-      value = get(obj, k);
-  return assoc(obj, k, fn.apply(value, [value].concat(args)));
-}
-
-module.exports = update;
-},{"./assoc":2,"./get":7}],16:[function(require,module,exports){
-var getIn = require('./getIn'),
-    assocIn = require('./assocIn');
-
-function updateIn(obj, keys, fn) {
-  var args = Array.prototype.slice.call(arguments, 3),
-      value = getIn(obj, keys);
-  return assocIn(obj, keys, fn.apply(value, [value].concat(args)));
-}
-
-module.exports = updateIn;
-},{"./assocIn":3,"./getIn":8}],17:[function(require,module,exports){
-var isArray = Array.isArray;
-
-function isObject(obj) {
-  return typeof obj === 'object';
-}
-
-function isUndefined(v) {
-  return v === void 0;
-}
-
-function isNull(v) {
-  return v === null;
-}
-
-// Shallow copy
-function copy(obj) {
-  if (isArray(obj)) return obj.slice();
-  var newObj = {};
-  for (var k in obj) {
-    newObj[k] = obj[k];
+  function update(obj, k, fn) {
+    var value = get(obj, k);
+    return assoc(obj, k, fn.apply(value, [value ].concat( slice.call(arguments, 3))))
   }
-  return newObj;
-}
 
-function objectKeys(obj) {
-  var keys = [];
-  for (var k in obj) {
-    keys.push(k);
+  function updateIn(obj, keys, fn) {
+    var value = getIn(obj, keys);
+    return assocIn(obj, keys, fn.apply(value, [value ].concat( slice.call(arguments, 3))))
   }
-  return keys;
-}
 
-module.exports = {
-  copy: copy,
-  objectKeys: objectKeys,
-  isObject: isObject,
-  isArray: isArray,
-  isUndefined: isUndefined,
-  isNull: isNull
-};
-},{}]},{},[1])(1)
-});
+  function multiUpdate(obj, path) {
+    if (Array.isArray(path)) { return updateIn.apply(this, arguments) }
+    return update.apply(this, arguments)
+  }
+
+  function merge() {
+    var arguments$1 = arguments;
+
+    var argsLen = arguments.length;
+    var i = 0;
+    var o = arguments[0];
+    var current;
+
+    while (++i < argsLen) {
+      current = arguments$1[i];
+      for (var k in current) {
+        o = assoc(o, k, current[k]);
+      }
+    }
+
+    return o
+  }
+
+  function deepMerge(obj, obj2) {
+    var keys = Object.keys(obj2);
+    var keysLen = keys.length;
+    var i = -1;
+    var o = obj;
+    var value;
+    var k;
+
+    while (++i < keysLen) {
+      k = keys[i];
+      value = obj2[k];
+
+      if (isObject(value) && value !== null) {
+        // Just assigning value to o[k] when k is not in o would be faster but less safe because we'd keep a reference to value
+        o = assoc(o, k, (k in o) ? deepMerge(o[k], value) : copy(value));
+      } else {
+        o = assoc(o, k, value);
+      }
+    }
+
+    return o
+  }
+
+  function variadicDeepMerge() {
+    var arguments$1 = arguments;
+
+    var argsLen = arguments.length;
+    var i = 0;
+    var target = arguments[0];
+
+    while (++i < argsLen) {
+      target = deepMerge(target, arguments$1[i]);
+    }
+
+    return target
+  }
+
+  exports.assoc = multiAssoc;
+  exports.deepMerge = variadicDeepMerge;
+  exports.dissoc = multiDissoc;
+  exports.get = multiGet;
+  exports.merge = merge;
+  exports.update = multiUpdate;
+
+  return exports;
+
+}({}));

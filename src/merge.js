@@ -1,19 +1,19 @@
-var assoc = require('./assoc');
+import assoc from './assoc'
 
 function merge() {
-  var n = arguments.length,
-      i = 0,
-      o = arguments[0],
-      k, obj;
+  const argsLen = arguments.length
+  let i = 0
+  let o = arguments[0]
+  let current
 
-  while (++i < n) {
-    obj = arguments[i];
-    for (k in obj) {
-      o = assoc(o, k, obj[k]);
+  while (++i < argsLen) {
+    current = arguments[i]
+    for (let k in current) {
+      o = assoc(o, k, current[k])
     }
   }
 
-  return o;
+  return o
 }
 
-module.exports = merge;
+export default merge

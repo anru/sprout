@@ -1,4 +1,7 @@
 benchmark/
 test/
 bower.json
-sprout*.js
+sprout.js
+sprout.min.js
+/rollup.config.js
+/Makefile

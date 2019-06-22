@@ -1,40 +1,16 @@
-var isArray = Array.isArray;
 
-function isObject(obj) {
-  return typeof obj === 'object';
-}
+export const slice = Array.prototype.slice
 
-function isUndefined(v) {
-  return v === void 0;
-}
-
-function isNull(v) {
-  return v === null;
+export function isObject(obj) {
+  return typeof obj === 'object'
 }
 
 // Shallow copy
-function copy(obj) {
-  if (isArray(obj)) return obj.slice();
-  var newObj = {};
-  for (var k in obj) {
-    newObj[k] = obj[k];
+export function copy(obj) {
+  if (Array.isArray(obj)) return obj.slice()
+  const newObj = {}
+  for (let k in obj) {
+    newObj[k] = obj[k]
   }
-  return newObj;
+  return newObj
 }
-
-function objectKeys(obj) {
-  var keys = [];
-  for (var k in obj) {
-    keys.push(k);
-  }
-  return keys;
-}
-
-module.exports = {
-  copy: copy,
-  objectKeys: objectKeys,
-  isObject: isObject,
-  isArray: isArray,
-  isUndefined: isUndefined,
-  isNull: isNull
-};

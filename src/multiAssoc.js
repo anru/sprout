@@ -1,20 +1,19 @@
-var util = require('./util'),
-    assoc = require('./assoc'),
-    assocIn = require('./assocIn');
+import assoc from './assoc'
+import assocIn from './assocIn'
 
 function multiAssoc(obj) {
-  var n = arguments.length,
-      i = -1,
-      o = obj,
-      path, value;
+  const argsLen = arguments.length
+  let o = obj
+  let path
+  let value
 
-  while ((i += 2) < n) {
-    path = arguments[i];
-    value = arguments[i + 1];
-    o = util.isArray(path) ? assocIn(o, path, value) : assoc(o, path, value);
+  for (let i = 1; i < argsLen; i += 2) {
+    path = arguments[i]
+    value = arguments[i + 1]
+    o = Array.isArray(path) ? assocIn(o, path, value) : assoc(o, path, value)
   }
 
-  return o;
+  return o
 }
 
-module.exports = multiAssoc;
+export default multiAssoc

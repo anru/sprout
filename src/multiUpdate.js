@@ -1,10 +1,9 @@
-var util = require('./util'),
-    update = require('./update'),
-    updateIn = require('./updateIn');
+import update from './update'
+import updateIn from './updateIn'
 
 function multiUpdate(obj, path) {
-  if (util.isArray(path)) return updateIn.apply(this, arguments);
-  return update.apply(this, arguments);
+  if (Array.isArray(path)) return updateIn.apply(this, arguments)
+  return update.apply(this, arguments)
 }
 
-module.exports = multiUpdate;
+export default multiUpdate

@@ -1,18 +1,21 @@
-var util = require('./util'),
-    hasIn = require('./hasIn');
+import { copy } from './util'
+import hasIn from './hasIn'
 
 function dissocIn(obj, keys) {
-  if (!hasIn(obj, keys)) return obj;
-  var k = keys[0],
-      ks = keys.slice(1),
-      o = util.copy(obj);
-  if (ks.length) {
-    o[k] = dissocIn(obj[k], ks);
-    if (!util.objectKeys(o[k]).length) delete o[k];
+  if (!hasIn(obj, keys)) return obj
+
+  const k = keys[0]
+  const ks = keys.slice(1)
+  const o = copy(obj)
+  if (ks.length !== 0) {
+    o[k] = dissocIn(obj[k], ks)
+    if (Object.keys(o[k]).length === 0) {
+      delete o[k]
+    }
   } else {
-    delete o[k];
+    delete o[k]
   }
-  return o;
+  return o
 }
 
-module.exports = dissocIn;
+export default dissocIn

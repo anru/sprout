@@ -4,7 +4,7 @@ const mori = require('mori');
 const immutabilityHelper = require('immutability-helper');
 const clone = require('clone');
 const _ = require('lodash');
-const sprout = require('../index');
+const sprout = require('../sprout.cjs');
 
 const suite = new Benchmark.Suite;
 
