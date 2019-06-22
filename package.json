@@ -1,8 +1,9 @@
 {
   "name": "sprout-data",
-  "version": "0.2.4",
+  "version": "1.0.0",
   "description": "A set of functions to work with nested data.",
   "main": "index.js",
+  "typings": "./sprout.d.ts",
   "repository": "https://github.com/anru/sprout.git",
   "keywords": [
     "immutable",
