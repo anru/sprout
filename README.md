@@ -1,7 +1,8 @@
 # Sprout
 
-![npm version](https://img.shields.io/npm/v/sprout-data.svg)
-![minzipped size](https://img.shields.io/bundlephobia/minzip/sprout-data.svg)
+[![npm version](https://img.shields.io/npm/v/sprout-data.svg)](https://www.npmjs.com/package/sprout-data)
+[![minzipped size](https://img.shields.io/bundlephobia/minzip/sprout-data.svg)](https://bundlephobia.com/result?p=sprout-data)
+[![Uses yarn](https://img.shields.io/badge/deps-yarn-blue.svg)](https://yarnpkg.com/en/package/sprout-data)
 
 Sprout provides a set of functions to help you work with nested data without all the headaches. Sprout never mutates the original data but returns new versions. This way, plain JavaScript objects (and arrays) can be effectively treated as if they were immutable.
 
@@ -14,7 +15,7 @@ One useful application of this would be to modify application state using Sprout
 Sprout's `get()` function allows you to gracefully retrieve nested values without blowing up when a key isn't present.
 
 ```js
-var data = {a: {b: {c: 'foo'}}};
+const data = {a: {b: {c: 'foo'}}};
 ```
 
 Normally, you'd retrieve the value of `c` like this:
@@ -56,7 +57,7 @@ sprout.get(data, ['a', 'b', 'c']) // => undefined
 Additionally, you can supply a default return value as the third parameter to `sprout.get()`. This is useful for example when you expect an array and want to call its methods later.
 
 ```js
-var z = sprout.get(data, ['x', 'y', 'z'], []);
+const z = sprout.get(data, ['x', 'y', 'z'], []);
 z.filter(...);
 ```
 
@@ -103,14 +104,12 @@ The easy approach to achieve this would be to create a deep copy of your data an
 For efficiency, Sprout uses *structural sharing*. This means it re-uses unmodified parts of your data. This is more performant and memory-efficient than deep-copying. It also lets you compare individual parts with strict equality to detect what has changed. Consider the following scenario:
 
 ```js
-var data, updatedData;
-
-data = {
+const data = {
   a: {b: {c: 1}},
   x: {y: {z: 1}}
 };
 
-updatedData = sprout.assoc(data, ['a', 'b', 'c'], 2);
+const updatedData = sprout.assoc(data, ['a', 'b', 'c'], 2);
 ```
 
 - `updatedData.a.b.c === 2`
@@ -122,9 +121,9 @@ updatedData = sprout.assoc(data, ['a', 'b', 'c'], 2);
 When an operation doesn't actually change a value (i.e. when the new value is strictly equal to the old one), Sprout doesn't create new objects at all and returns the original unmodified data instead.
 
 ```js
-data = {a: 1};
+const data = {a: 1};
 
-updatedData = sprout.assoc(data, 'a', 1);
+const updatedData = sprout.assoc(data, 'a', 1);
 ```
 
 In this case, `updatedData === data`.
@@ -140,7 +139,7 @@ npm install sprout-data --save
 or
 
 ```shell
-bower install sprout-data --save
+yarn add sprout-data
 ```
 
 or just download and include `sprout.js` or `sprout.min.js` in your page.
@@ -154,8 +153,8 @@ The *path* argument can be a single key or an array of keys to access nested pro
 Get a (nested) property from an object. Returns `undefined` or – if provided – the *defaultValue* if any key in the path doesn't exist.
 
 ```js
-var get = require('sprout-data').get;
-var obj = {a: 'foo', b: {c: 'bar'}};
+const { get } = require('sprout-data');
+const obj = {a: 'foo', b: {c: 'bar'}};
 
 // Get a property
 get(obj, 'a') // => 'foo'
@@ -178,8 +177,8 @@ get(obj, ['b', 'd'], 'not found') // => 'not found'
 Assigns a value to a *path* in *obj*. Multiple path-value pairs can be specified.
 
 ```js
-var assoc = require('sprout-data').assoc;
-var obj = {a: 'foo', b: {c: 'bar'}};
+const { assoc } = require('sprout-data');
+const obj = {a: 'foo', b: {c: 'bar'}};
 
 // Change a property
 assoc(obj, 'a', 'baz'); // => {a: 'baz', b: {c: 'bar'}}
@@ -199,8 +198,8 @@ assoc(obj, ['b', 'c'], 'baz', ['b', 'd'], 'blah'}}); // => {a: 'foo', b: {c: 'ba
 Removes a property at *path* from *obj*. Multiple paths can be specified to remove multiple properties. If all properties are removed from an object, the object itself will also be removed.
 
 ```js
-var dissoc = require('sprout-data').dissoc;
-var obj = {a: 'foo', b: {c: 'bar', d: 1, e: 'baz'}};
+const { dissoc } = require('sprout-data');
+const obj = {a: 'foo', b: {c: 'bar', d: 1, e: 'baz'}};
 
 // Remove a property
 dissoc(obj, 'a'); // => {b: {c: 'bar', d: 1, e: 'baz'}}
@@ -220,8 +219,8 @@ dissoc(obj, ['b', 'c'], ['b', 'd'], ['b', 'e']); // => {a: 'foo'}
 Applies *fn* to a property at *path* from *obj*. Optional *args* will be supplied to *fn*.
 
 ```js
-var update = require('sprout-data').update;
-var obj = {a: 1, b: {c: 2}};
+const { update } = require('sprout-data');
+const obj = {a: 1, b: {c: 2}};
 
 // Update a property
 update(obj, 'a', function(v) { return v + 1; }); // => {a: 2, b: {c: 2}}
@@ -239,8 +238,8 @@ update(obj, ['b', 'c'], add, 5); // => {a: 1, b: {c: 7}}
 (Shallow) merge *obj2*'s properties into *obj*. Properties of the rightmost object will override existing properties.
 
 ```js
-var merge = require('sprout-data').merge;
-var obj = {a: 1, b: {c: 2}};
+const { merge } = require('sprout-data');
+const obj = {a: 1, b: {c: 2}};
 
 // Merge
 merge(obj, {d: 5}); // => {a: 1, b: {c: 2}, d: 5}
@@ -254,8 +253,8 @@ merge(obj, {d: 5, e: 6}, {d: 10}); // => {a: 1, b: {c: 2}, d: 10, e: 6}
 Deep-merge *obj2*'s properties into *obj*. Properties of the rightmost object will override existing properties. Non-existing objects will be created.
 
 ```js
-var deepMerge = require('sprout-data').deepMerge;
-var obj = {a: 1, b: {c: 2, d: 3}};
+const { deepMerge } = require('sprout-data');
+const obj = {a: 1, b: {c: 2, d: 3}};
 
 // Deep merge
 deepMerge(obj, {b: {d: 5}}); // => {a: 1, b: {c: 2, d: 5}}
