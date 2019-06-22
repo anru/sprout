@@ -1,6 +1,6 @@
 # Sprout
 
-[![build status](https://img.shields.io/travis/com/anru/sprout-data.svg)](https://travis-ci.com/anru/sprout)
+[![Build Status](https://travis-ci.com/anru/sprout.svg?branch=master)](https://travis-ci.com/anru/sprout)
 [![npm version](https://img.shields.io/npm/v/sprout-data.svg)](https://www.npmjs.com/package/sprout-data)
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/sprout-data.svg)](https://bundlephobia.com/result?p=sprout-data)
 [![Uses yarn](https://img.shields.io/badge/deps-yarn-blue.svg)](https://yarnpkg.com/en/package/sprout-data)
