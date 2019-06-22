@@ -1,10 +1,10 @@
-var util = require('./util');
+import { copy } from './util'
 
 function dissoc(obj, k) {
-  if(!(k in obj)) return obj;
-  var o = util.copy(obj);
-  delete o[k];
-  return o;
+  if (!(k in obj)) return obj
+  const o = copy(obj)
+  delete o[k]
+  return o
 }
 
-module.exports = dissoc;
+export default dissoc

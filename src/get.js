@@ -1,8 +1,10 @@
-var util = require('./util');
+import { isObject } from './util'
 
 function get(obj, k, orValue) {
-  if (!util.isObject(obj) || util.isNull(obj) || !(k in obj)) return orValue;
-  return obj[k];
+  if (!isObject(obj) || obj === null || !(k in obj)) {
+    return orValue
+  }
+  return obj[k]
 }
 
-module.exports = get;
+export default get

@@ -1,10 +1,10 @@
-var getIn = require('./getIn'),
-    assocIn = require('./assocIn');
+import { slice } from './util'
+import getIn from './getIn'
+import assocIn from './assocIn'
 
 function updateIn(obj, keys, fn) {
-  var args = Array.prototype.slice.call(arguments, 3),
-      value = getIn(obj, keys);
-  return assocIn(obj, keys, fn.apply(value, [value].concat(args)));
+  const value = getIn(obj, keys)
+  return assocIn(obj, keys, fn.apply(value, [value, ...slice.call(arguments, 3)]))
 }
 
-module.exports = updateIn;
+export default updateIn

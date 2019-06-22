@@ -1,10 +1,9 @@
-var util = require('./util'),
-    get = require('./get'),
-    getIn = require('./getIn');
+import get from './get'
+import getIn from './getIn'
 
 function multiGet(obj, path, orValue) {
-  if (util.isArray(path)) return getIn(obj, path, orValue);
-  return get(obj, path, orValue);
+  if (Array.isArray(path)) return getIn(obj, path, orValue)
+  return get(obj, path, orValue)
 }
 
-module.exports = multiGet;
+export default multiGet

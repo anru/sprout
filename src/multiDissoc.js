@@ -1,19 +1,18 @@
-var util = require('./util'),
-    dissoc = require('./dissoc'),
-    dissocIn = require('./dissocIn');
+import dissoc from './dissoc'
+import dissocIn from './dissocIn'
 
 function multiDissoc(obj) {
-  var n = arguments.length,
-      i = 0,
-      o = obj,
-      path;
+  const argsLen = arguments.length
+  let i = 0
+  let o = obj
+  let path
 
-  while (++i < n) {
-    path = arguments[i];
-    o = util.isArray(path) ? dissocIn(o, path) : dissoc(o, path);
+  while (++i < argsLen) {
+    path = arguments[i]
+    o = Array.isArray(path) ? dissocIn(o, path) : dissoc(o, path)
   }
 
-  return o;
+  return o
 }
 
-module.exports = multiDissoc;
+export default multiDissoc
