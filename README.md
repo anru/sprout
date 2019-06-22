@@ -2,8 +2,8 @@
 
 [![Build Status](https://travis-ci.com/anru/sprout.svg?branch=master)](https://travis-ci.com/anru/sprout)
 [![npm version](https://img.shields.io/npm/v/sprout-data.svg)](https://www.npmjs.com/package/sprout-data)
+[![tree-shakeable](https://img.shields.io/badge/esm-tree--shakeable-brightgreen.svg)](https://bundlephobia.com/result?p=sprout-data)
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/sprout-data.svg)](https://bundlephobia.com/result?p=sprout-data)
-[![Uses yarn](https://img.shields.io/badge/deps-yarn-blue.svg)](https://yarnpkg.com/en/package/sprout-data)
 [![semantic versioning](https://img.shields.io/badge/semver-yes-blue.svg)](https://github.com/anru/sprout/releases)
 
 Sprout provides a set of functions to help you work with nested data without all the headaches. Sprout never mutates the original data but returns new versions. This way, plain JavaScript objects (and arrays) can be effectively treated as if they were immutable.
