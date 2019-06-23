@@ -1,11 +1,12 @@
 {
   "name": "sprout-data",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A set of functions to work with nested data.",
   "main": "./sprout.cjs.js",
   "module": "sprout.esm.js",
   "typings": "./sprout.d.ts",
-  "repository": "https://github.com/anru/sprout.git",
+  "sideEffects": false,
+  "repository": "github:anru/sprout",
   "keywords": [
     "immutable",
     "nested",
