@@ -5,3 +5,4 @@ sprout.js
 sprout.min.js
 /rollup.config.js
 /Makefile
+/types/*.test-d.ts

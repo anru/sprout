@@ -8,7 +8,7 @@ function merge() {
 
   while (++i < argsLen) {
     current = arguments[i]
-    for (let k in current) {
+    for (const k in current) {
       o = assoc(o, k, current[k])
     }
   }

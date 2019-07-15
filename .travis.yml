@@ -8,3 +8,4 @@ script:
   - yarn es5-check
   - yarn lint
   - yarn test
+  - yarn tsd
