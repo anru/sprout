@@ -9,7 +9,7 @@ export function isObject(obj) {
 export function copy(obj) {
   if (Array.isArray(obj)) return obj.slice()
   const newObj = {}
-  for (let k in obj) {
+  for (const k in obj) {
     newObj[k] = obj[k]
   }
   return newObj
