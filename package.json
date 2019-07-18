@@ -1,6 +1,6 @@
 {
   "name": "sprout-data",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A set of functions to work with nested data.",
   "main": "./sprout.cjs.js",
   "module": "sprout.esm.js",
