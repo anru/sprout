@@ -5,8 +5,7 @@ export interface UpdateFn<T, R = T, A extends Array<any> = any[]> {
 
 export type Key = string | number
 
-// unfortunately, TS doesn't support recursive types
-// see https://github.com/Microsoft/TypeScript/issues/3496#issuecomment-128843289 
+// try this approach after this PR https://github.com/microsoft/TypeScript/pull/33050 got released
 // type PropType<T extends object, K> = 
 //   K extends [keyof T, infer R] ? (T[K[0]] extends object ? PropType<T[K[0]], R> : never)
 //   : K extends keyof T ? T[K] : never
@@ -28,7 +27,7 @@ export function dissoc<T = any>(arr: T[], path: number): Array<T | void>
 // target = object like, path = scalar
 export function get<T extends object, K extends keyof T>(obj: T, path: K, def?: T[K]): T[K]
 export function assoc<T extends object, K extends keyof T>(obj: T, path: K, value: T[K]): T
-export function dissoc<T extends object, K extends keyof T>(obj: T, ...paths: K[]): Omit<T, K>
+export function dissoc<T extends object, K extends keyof T>(obj: T, path: K): Omit<T, K>
 export function update<T extends object, K extends keyof T, V = T[K]>
                   (obj: T, path: K, updateFn: UpdateFn<T[K], V, typeof args>, ...args: any[]): T
 
@@ -49,3 +48,4 @@ export function assoc<T extends object>(obj: T,
   ...args: Array<any>
 ): T
 
+export function dissoc<T extends object>(obj: T, ...paths: Array<Key[] | Key>): T
