@@ -70,6 +70,7 @@ eatComplexStruct(assoc(s[0], ['nested', 'step'], 5))
 
 dissoc(s[0], 'name', 'nested')
 dissoc(s, 0, 1, 2, 3)
+dissoc(s, ['0', '1', '2'], 3)
 
 expectError(eatComplexStruct(dissoc(s[0], 'name')))
 
