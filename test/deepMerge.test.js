@@ -78,4 +78,35 @@ describe('deepMerge', () => {
     var newObj = deepMerge(obj, {a: {c: 2}})
     assert.deepEqual(newObj, {a: {c: 2}, b: {c: 2}})
   })
+
+  it('nested arrays', () => {
+    const a = {a: [1, 2, 3]}
+    const b = {a: [4, 5]}
+
+    assert.deepEqual(deepMerge(a, b), {a: [4, 5]})
+  })
+
+  it('undefined values in source object', () => {
+    const a = {a: void 0}
+    const b = {a: [1, 2, 3]}
+
+    assert.deepEqual(deepMerge(a, b), {a: [1, 2, 3]})
+  })
+
+  it('number values in source object', () => {
+    const a = {a: 1}
+    const b = {a: [1, 2, 3]}
+
+    const result = deepMerge(a, b)
+    assert.isArray(result.a)
+    assert.notStrictEqual(result.a, b.a)
+    assert.deepEqual(result, {a: [1, 2, 3]})
+  })
+
+  it('string values in source object', () => {
+    const a = {a: 'foo-bar'}
+    const b = {a: [1, 2, 3]}
+
+    assert.deepEqual(deepMerge(a, b), {a: [1, 2, 3]})
+  })
 })

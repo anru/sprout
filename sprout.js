@@ -7,6 +7,10 @@ var sprout = (function (exports) {
     return typeof obj === 'object'
   }
 
+  function isPlainObject(obj) {
+    return obj !== null && Object.prototype.toString.call(obj) === '[object Object]'
+  }
+
   // Shallow copy
   function copy(obj) {
     if (Array.isArray(obj)) { return obj.slice() }
@@ -173,12 +177,16 @@ var sprout = (function (exports) {
       k = keys[i];
       value = obj2[k];
 
-      if (isObject(value) && value !== null) {
+      var valueIsPlainObject = isPlainObject(value);
+
+      var newValue = value;
+
+      if (valueIsPlainObject || Array.isArray(value)) {
         // Just assigning value to o[k] when k is not in o would be faster but less safe because we'd keep a reference to value
-        o = assoc(o, k, (k in o) ? deepMerge(o[k], value) : copy(value));
-      } else {
-        o = assoc(o, k, value);
+        newValue = (k in o) && isPlainObject(o[k]) && valueIsPlainObject ? deepMerge(o[k], value) : copy(value);
       }
+
+      o = assoc(o, k, newValue);
     }
 
     return o
